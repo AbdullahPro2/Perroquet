@@ -1,11 +1,21 @@
 import { useState } from "react";
-import { useGameStore } from "../stores/useGameStore";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../stores/appStore";
 import type { CampPolitical, PlatformId } from "../types/game";
 
 export const SetupPage = () => {
-  const setupIdentity = useGameStore((state) => state.setupIdentity);
+  // On utilise la nouvelle architecture actions.setupIdentity
+  const setupIdentity = useAppStore((state) => state.actions.setupIdentity);
   const [camp, setCamp] = useState<CampPolitical | null>(null);
   const [platform, setPlatform] = useState<PlatformId | null>(null);
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    if (camp && platform) {
+      setupIdentity(platform);
+      navigate("/"); // Redirection immédiate vers le Dashboard
+    }
+  };
 
   return (
     <div className="h-screen w-screen bg-slate-900 flex items-center justify-center p-4">
@@ -67,7 +77,7 @@ export const SetupPage = () => {
 
           <button
             disabled={!camp || !platform}
-            onClick={() => camp && platform && setupIdentity(camp, platform)}
+            onClick={handleStart}
             className="w-full mt-4 bg-indigo-600 disabled:bg-slate-300 text-white font-black py-4 rounded-xl shadow-lg hover:bg-indigo-700 transition-all"
           >
             CRÉER MON COMPTE

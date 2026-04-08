@@ -1,7 +1,7 @@
-import { useGameStore } from "../stores/useGameStore";
+import { useAppStore } from "../stores/appStore";
 
 export const Topbar = () => {
-  const { audience, capital, mentalHealth } = useGameStore();
+  const { audience, capital, mentalHealth } = useAppStore();
 
   return (
     <header className="h-20 bg-white shadow-sm border-b border-slate-200 flex items-center justify-end px-8 shrink-0 gap-8 z-10">
