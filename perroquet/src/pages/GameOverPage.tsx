@@ -8,7 +8,7 @@ export const GameOverPage = () => {
 
   const handleRestart = () => {
     // 1. On détruit la sauvegarde persistante directement dans le navigateur
-    localStorage.removeItem("perroquet-game-v2"); 
+    localStorage.removeItem("perroquet-game-v4"); 
     
     // 2. On force un rechargement complet (hard-reload) vers la page setup
     // Cela réinitialise entièrement React et Zustand, garantissant un jeu neuf à 100%

@@ -1,28 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../stores/appStore";
-// Attention : Pense à mettre à jour tes types Theme et Camp dans "../types/game.ts" !
 import type { Theme, Camp } from "../types/game"; 
 import { SimulationChart } from "../features/dashboard/components/SimulationChart";
 
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
 export const StudioPage = () => {
   const navigate = useNavigate();
-  // On récupère la santé mentale depuis le store
   const mentalHealth = useAppStore((state) => state.mentalHealth);
 
-  // Le "Watcher" : si la santé mentale tombe à 0, on expulse le joueur
   useEffect(() => {
     if (mentalHealth <= 0) {
       navigate("/game-over");
     }
   }, [mentalHealth, navigate]);
 
-  const { currentTrend, hasTrendAnalyzer, postHistory } = useAppStore();
+  const { currentTrend, hasTrendAnalyzer, hasPoliticalDoc, postHistory } = useAppStore();
   const { publishContent } = useAppStore((state) => state.actions);
 
-  // Nouveaux états basés sur le cahier des charges
   const [camp, setCamp] = useState<Camp>("gauche");
   const [theme, setTheme] = useState<Theme>("ecologie");
   const [format, setFormat] = useState<"court" | "long">("court");
@@ -35,7 +29,6 @@ export const StudioPage = () => {
     setLastPostFeedback(result.feedback);
   };
 
-  // Nouveaux camps politiques
   const CAMPS: { id: Camp; label: string }[] = [
     { id: "extreme_gauche", label: "Extrême Gauche" },
     { id: "gauche", label: "Gauche" },
@@ -44,7 +37,6 @@ export const StudioPage = () => {
     { id: "extreme_droite", label: "Extrême Droite" },
   ];
 
-  // Nouveaux thèmes
   const THEMES: { id: Theme; icon: string; label: string }[] = [
     { id: "immigration", icon: "🛂", label: "Immigration" },
     { id: "ecologie", icon: "🌍", label: "Écologie" },
@@ -56,7 +48,6 @@ export const StudioPage = () => {
     <div className="grid grid-cols-12 gap-6 h-full">
       <div className="col-span-6 bg-slate-800 rounded-2xl shadow-xl border border-slate-700 flex flex-col overflow-hidden">
         
-        {/* EN TÊTE ET TENDANCES */}
         <div className="p-6 border-b border-slate-700 bg-slate-800/50 flex flex-col gap-4">
           <h2 className="text-xl font-black text-white">Nouvelle Publication</h2>
           {hasTrendAnalyzer ? (
@@ -73,27 +64,40 @@ export const StudioPage = () => {
 
         <div className="p-6 flex-1 flex flex-col gap-6 overflow-y-auto">
           
-          {/* SÉLECTION DU CAMP (Nouveau) */}
+          {/* SECTION DES CAMPS POLITIQUES */}
           <div>
             <span className="text-xs font-bold text-slate-400 uppercase mb-2 block">Camp Politique</span>
             <div className="flex flex-wrap gap-2">
-              {CAMPS.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => setCamp(c.id)}
-                  className={`px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all flex-1 ${
-                    camp === c.id 
-                      ? "border-indigo-500 bg-indigo-900/50 text-indigo-300" 
-                      : "border-slate-700 text-slate-400 hover:border-slate-500"
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
+              {CAMPS.map((c) => {
+                // LA LOGIQUE DE VERROUILLAGE :
+                const isExtreme = c.id === "extreme_gauche" || c.id === "extreme_droite";
+                const isDisabled = isExtreme && !hasPoliticalDoc;
+
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => setCamp(c.id)}
+                    disabled={isDisabled}
+                    className={`px-3 py-2 rounded-lg border-2 text-xs font-bold transition-all flex-1 ${
+                      isDisabled 
+                        ? "border-slate-800 bg-slate-800 text-slate-600 cursor-not-allowed" 
+                        : camp === c.id 
+                          ? "border-indigo-500 bg-indigo-900/50 text-indigo-300" 
+                          : "border-slate-700 text-slate-400 hover:border-slate-500"
+                    }`}
+                  >
+                    {isDisabled ? "🔒 Bloqué" : c.label}
+                  </button>
+                );
+              })}
             </div>
+            {!hasPoliticalDoc && (
+              <p className="text-[10px] text-slate-500 mt-2 italic text-center">
+                (Achetez le document stratégique dans la boutique pour débloquer de nouvelles approches).
+              </p>
+            )}
           </div>
 
-          {/* SÉLECTION DU THÈME (Mis à jour) */}
           <div>
             <span className="text-xs font-bold text-slate-400 uppercase mb-2 block">Thème Abordé</span>
             <div className="grid grid-cols-4 gap-2">
@@ -114,7 +118,6 @@ export const StudioPage = () => {
             </div>
           </div>
 
-          {/* SWITCHS FORMAT ET TON (Remplacent les sliders) */}
           <div className="grid grid-cols-2 gap-4 border-t border-slate-700 pt-6">
             <div>
               <span className="text-xs font-bold text-slate-400 uppercase mb-2 block text-center">Format</span>
@@ -155,7 +158,6 @@ export const StudioPage = () => {
           
         </div>
 
-        {/* BOUTON PUBLIER */}
         <div className="p-6 bg-slate-900/50 border-t border-slate-700">
           <button
             onClick={handlePublish}
@@ -166,7 +168,6 @@ export const StudioPage = () => {
         </div>
       </div>
 
-      {/* ZONE DE FEEDBACK ET GRAPHIQUE */}
       <div className="col-span-6 flex flex-col gap-6">
         <div className="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 p-6 min-h-[120px] flex items-center justify-center text-center">
           {lastPostFeedback ? (
