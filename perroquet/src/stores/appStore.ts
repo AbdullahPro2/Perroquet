@@ -30,6 +30,7 @@ export interface PostResult {
 interface GameState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
+  hasSeenIntro: boolean;
   platform: PlatformId | null;
   initialCamp: Camp | null; 
 
@@ -81,6 +82,8 @@ export const useAppStore = create<GameState>()(
   devtools(
     persist(
       immer((set, get) => ({
+        hasSeenIntro: false, 
+        sidebarOpen: true,
         sidebarOpen: true,
         theme: "dark",
         platform: null,
@@ -107,6 +110,12 @@ export const useAppStore = create<GameState>()(
         ],
 
         actions: {
+          
+          // markIntroSeen: () => void;
+          markIntroSeen: () =>
+            set((state) => {
+              state.hasSeenIntro = true;
+            }),
           setupIdentity: (platform, initialCamp) =>
             set((state) => {
               state.platform = platform;

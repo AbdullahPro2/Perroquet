@@ -4,7 +4,7 @@ export const Topbar = () => {
   const { audience, capital, mentalHealth } = useAppStore();
 
   return (
-    <header className="h-20 bg-white shadow-sm border-b border-slate-200 flex items-center justify-end px-8 shrink-0 gap-8 z-10">
+    <header className="h-20 bg-dark shadow-sm border-b border-slate-200 flex items-center justify-end px-8 shrink-0 gap-8 z-10">
       <div className="flex items-center gap-3">
         <span className="text-3xl">👀</span>
         <div className="flex flex-col">
@@ -34,7 +34,7 @@ export const Topbar = () => {
             className={
               mentalHealth < 30
                 ? "text-rose-500 animate-pulse"
-                : "text-slate-700"
+                : "text-slate-200"
             }
           >
             {mentalHealth}%

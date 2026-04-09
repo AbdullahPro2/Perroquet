@@ -6,8 +6,13 @@ import { ShopPage } from "../pages/ShopPage";
 import { GameOverPage } from "../pages/GameOverPage";
 import { PublishingPage } from "../pages/PublishingPage";
 import { ResultPage } from "../pages/ResultPage";
+import { IntroPage } from "../pages/IntroPage";
 
 export const router = createBrowserRouter([
+  {
+    path: "/intro", // <--- Nouvelle route
+    element: <IntroPage />,
+  },
   {
     path: "/setup",
     element: <SetupPage />,
