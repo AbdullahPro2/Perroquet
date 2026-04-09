@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppStore } from "../stores/appStore";
+import { useAppStore, PLATFORMS_CONFIG } from "../stores/appStore";
 // On utilise le type "Camp" que l'on a mis à jour précédemment
 import type { Camp, PlatformId } from "../types/game";
 
@@ -65,40 +65,29 @@ export const SetupPage = () => {
               2. La Plateforme Cible
             </h2>
             <div className="grid grid-cols-2 gap-3">
-              {/* BOUTON X-SPHERE (Actif) */}
-              <button
-                onClick={() => setPlatform("xsphere")}
-                className={`p-4 rounded-xl border-2 text-left transition-all ${
-                  platform === "xsphere"
-                    ? "border-indigo-600 bg-indigo-50"
-                    : "border-slate-200 hover:border-slate-300"
-                }`}
-              >
-                <h3
-                  className={`font-black ${platform === "xsphere" ? "text-indigo-700" : "text-slate-800"}`}
+              
+              {/* On génère les boutons automatiquement avec nos DEUX plateformes */}
+              {Object.values(PLATFORMS_CONFIG).map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => setPlatform(p.id)}
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    platform === p.id
+                      ? "border-indigo-600 bg-indigo-50"
+                      : "border-slate-200 hover:border-slate-300 bg-white"
+                  }`}
                 >
-                  X-Sphere
-                </h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Micro-blogging et viralité rapide.
-                </p>
-              </button>
+                  <h3
+                    className={`font-black ${platform === p.id ? "text-indigo-700" : "text-slate-800"}`}
+                  >
+                    {p.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {p.description}
+                  </p>
+                </button>
+              ))}
 
-              {/* BOUTON VIDTUBE (Désactivé) */}
-              <button
-                disabled
-                className="p-4 rounded-xl border-2 border-slate-100 bg-slate-50 text-left cursor-not-allowed opacity-60"
-              >
-                <div className="flex justify-between items-center">
-                  <h3 className="font-black text-slate-400">VidTube</h3>
-                  <span className="text-[10px] font-bold bg-slate-200 text-slate-500 px-2 py-1 rounded">
-                    Bientôt
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Plateforme vidéo format long.
-                </p>
-              </button>
             </div>
           </div>
 
