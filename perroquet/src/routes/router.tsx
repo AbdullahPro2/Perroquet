@@ -7,6 +7,7 @@ import { GameOverPage } from "../pages/GameOverPage";
 import { PublishingPage } from "../pages/PublishingPage";
 import { ResultPage } from "../pages/ResultPage";
 import { IntroPage } from "../pages/IntroPage";
+import { VictoryPage } from "../pages/VictoryPage";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
   {
     path: "/game-over",
     element: <GameOverPage />
+  },
+  {
+    path: "/victory",
+    element: <VictoryPage />
   },
   {
     path: "/",
