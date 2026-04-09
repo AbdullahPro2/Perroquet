@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { Theme, PlatformId } from "../types/game";
+// ON IMPORTE BIEN LES NOUVEAUX TYPES ICI :
+import type { Theme, PlatformId, Camp, Format, Tone } from "../types/game";
 
 interface GameState {
   sidebarOpen: boolean;
@@ -13,7 +14,6 @@ interface GameState {
   currentTrend: Theme;
   hasTrendAnalyzer: boolean;
 
-  // NOUVEAU : La mémoire du jeu pour tracer le graphique
   postCount: number;
   postHistory: Array<{
     id: string;
@@ -25,17 +25,18 @@ interface GameState {
   actions: {
     setupIdentity: (platform: PlatformId) => void;
     buyTool: (tool: "trendAnalyzer", cost: number) => void;
-    // NOUVEAU : La fonction complète de publication
+    // LA SIGNATURE DOIT CORRESPONDRE AUX BOUTONS DE TON INTERFACE :
     publishContent: (
+      camp: Camp,
       themeChoice: Theme,
-      format: number,
-      tone: number,
-      alignment: number,
+      format: Format,
+      tone: Tone
     ) => { feedback: string };
   };
 }
 
-const ALL_THEMES: Theme[] = ["ecologie", "economie", "securite", "social"];
+// LES NOUVEAUX THÈMES POUR L'ANALYSEUR DE TENDANCE :
+const ALL_THEMES: Theme[] = ["immigration", "ecologie", "guerre", "science"];
 
 export const useAppStore = create<GameState>()(
   devtools(
@@ -47,13 +48,14 @@ export const useAppStore = create<GameState>()(
         audience: 100,
         capital: 50,
         mentalHealth: 100,
+        // On initialise avec une tendance valide
         currentTrend: ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)],
         hasTrendAnalyzer: false,
 
         postCount: 0,
         postHistory: [
           { id: "0", postCount: 0, audience: 100, mentalHealth: 100 },
-        ], // Point de départ
+        ],
 
         actions: {
           setupIdentity: (platform) =>
@@ -69,47 +71,62 @@ export const useAppStore = create<GameState>()(
               }
             }),
 
-          publishContent: (themeChoice, format, tone, alignment) => {
+          // LA LOGIQUE DE PUBLICATION :
+          publishContent: (camp, themeChoice, format, tone) => {
             const state = get();
             let feedback = "";
 
-            // 1. Mathématiques de l'algorithme (Exemple X-Sphere : format court et ton radical récompensés)
             const isTrending = themeChoice === state.currentTrend;
-            const trendMultiplier = isTrending ? 2.5 : 1.0;
+            
+            let audienceGain = 50;
+            let capitalGain = 10;
+            let healthLoss = 0;
 
-            // Calculs simplifiés pour l'exemple
-            const formatScore = (format / 100) * 2.5;
-            const toneScore = (tone / 100) * 3.0;
-            const metaScore = (alignment / 100) * 1.5 * trendMultiplier;
+            // Biais de format 
+            if (format === "court") {
+              audienceGain *= 2;
+              capitalGain *= 2;
+            } else {
+              audienceGain = Math.floor(audienceGain * 0.3);
+              capitalGain = 0; 
+            }
 
-            const viralityFactor = formatScore + toneScore + metaScore;
+            // Biais de ton 
+            if (tone === "radical") {
+              audienceGain *= 3;
+              capitalGain *= 3;
+              healthLoss += 15; 
+            } else {
+              healthLoss -= 5; 
+            }
 
-            const audienceGain = Math.floor(
-              10 * viralityFactor * (Math.random() * 0.5 + 0.8),
-            );
-            const capitalGain = Math.floor(5 * viralityFactor);
+            // Multiplicateur de tendance
+            if (isTrending) {
+              audienceGain = Math.floor(audienceGain * 1.5);
+              capitalGain = Math.floor(capitalGain * 1.5);
+            }
 
-            // 2. Le prix à payer (Santé mentale)
-            const selloutPenalty = alignment > 50 ? (alignment - 50) / 5 : 0;
-            const radicalPenalty = tone > 70 ? (tone - 70) / 4 : 0;
-            const healthLoss = Math.floor(selloutPenalty + radicalPenalty);
+            // Aléatoire
+            audienceGain = Math.floor(audienceGain * (Math.random() * 0.4 + 0.8));
 
-            // 3. Génération du feedback texte
-            if (isTrending && tone > 80)
-              feedback =
-                "🔥 SURF SUR LA TENDANCE : Algorithme saturé. Explosion des vues.";
-            else if (!isTrending && format < 20)
-              feedback = "📉 HORS-SUJET : Un sujet de fond ignoré par l'algo.";
-            else feedback = "📊 PUBLICATION STANDARD.";
+            // Feedback texte
+            if (isTrending && tone === "radical") {
+              feedback = "🔥 SURF SUR LA TENDANCE : L'algo s'emballe !";
+            } else if (!isTrending && format === "long") {
+              feedback = "📉 HORS-SUJET : Format trop long pour cette plateforme.";
+            } else if (tone === "radical") {
+              feedback = "📈 CLASH RÉUSSI : L'algorithme a adoré votre indignation.";
+            } else {
+              feedback = "📊 PUBLICATION STANDARD.";
+            }
 
-            // 4. Mise à jour de l'état
+            // Mise à jour finale
             set((draft) => {
               draft.audience += audienceGain;
               draft.capital += capitalGain;
-              draft.mentalHealth = Math.max(0, draft.mentalHealth - healthLoss);
+              draft.mentalHealth = Math.min(100, Math.max(0, draft.mentalHealth - healthLoss));
               draft.postCount += 1;
 
-              // On ajoute ce tour à l'historique pour le graphique
               draft.postHistory.push({
                 id: crypto.randomUUID(),
                 postCount: draft.postCount,
@@ -117,13 +134,9 @@ export const useAppStore = create<GameState>()(
                 mentalHealth: draft.mentalHealth,
               });
 
-              // Rotation de la tendance (30% de chance de changer)
               if (Math.random() > 0.7) {
-                const otherThemes = ALL_THEMES.filter(
-                  (t) => t !== draft.currentTrend,
-                );
-                draft.currentTrend =
-                  otherThemes[Math.floor(Math.random() * otherThemes.length)];
+                const otherThemes = ALL_THEMES.filter((t) => t !== draft.currentTrend);
+                draft.currentTrend = otherThemes[Math.floor(Math.random() * otherThemes.length)];
               }
             });
 
@@ -131,7 +144,7 @@ export const useAppStore = create<GameState>()(
           },
         },
       })),
-      { name: "perroquet-game" },
+      { name: "perroquet-game-v2" },
     ),
   ),
 );
