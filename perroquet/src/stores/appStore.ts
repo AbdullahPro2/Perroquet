@@ -148,9 +148,13 @@ export const useAppStore = create<GameState>()(
             let healthChange = 0;
 
             // 1. Format
-            engagementScore += format === "court" 
-              ? currentPlatformConfig.bias.formatCourt 
-              : currentPlatformConfig.bias.formatLong;
+            if (format === "court") {
+              engagementScore += currentPlatformConfig.bias.formatCourt;
+              healthChange -= 8; // Le format court (snack-content) fatigue
+            } else {
+              engagementScore += currentPlatformConfig.bias.formatLong;
+              healthChange += 19; // Prendre le temps de faire du contenu long est valorisant
+            }
 
             // 2. Ton
             if (tone === "radical") {
@@ -158,8 +162,15 @@ export const useAppStore = create<GameState>()(
               healthChange -= 8; // Le clash épuise toujours mentalement
             } else {
               engagementScore += currentPlatformConfig.bias.tonNuance;
-              healthChange += 10; // La nuance repose mentalement
+              healthChange += 19; // La nuance repose mentalement
             }
+
+            // --- MÉCANIQUE DE SOIN RAPIDE ---
+            // Si on fait "long" (plus interressant) et "nuancé" (pas de clash),
+            // on se repose énormément. On ajoute +25 pour un total de +30.
+            //if (format === "long" && tone === "nuance") {
+            //  healthChange += 25;
+            //}
 
             // 3. Tendance
             if (isTrending) {
@@ -174,8 +185,9 @@ export const useAppStore = create<GameState>()(
             
             // C. CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
             let audienceChange = 0;
+            
             let capitalGain = Math.floor(
-              10 + state.audience * 0.02 * Math.max(1, engagementScore),
+              25 + state.audience * 0.02 * Math.max(1, engagementScore),
             );
 
             if (engagementScore >= 4) {
@@ -189,17 +201,29 @@ export const useAppStore = create<GameState>()(
             } else {
               // Flop algorithmique
               audienceChange = -Math.floor(15 + state.audience * 0.03);
-              capitalGain = 5;
+              // Même un flop rapporte un petit peu d'argent
+              capitalGain = 12; 
             }
 
-            // D. LE BACKLASH ET LA CATHARSIS (Le cœur du dilemme)
-            if (dissonanceDistance === 0 && tone === "nuance") {
-              // CATHARSIS ABSOLUE : Le joueur est honnête avec lui-même et s'exprime calmement
-              healthChange += 20;
-            } else if (dissonanceDistance === 1) {
+            // D. LE BACKLASH, LA CATHARSIS ET L'OPPORTUNISME VIRAL
+            const isExtremePost = camp === "extreme_gauche" || camp === "extreme_droite";
+
+            if (dissonanceDistance === 1) {
               healthChange -= 5;
-            } else if (dissonanceDistance >= 2) {
-              // TRAHISON : Grand écart politique
+            } else if (dissonanceDistance === 2 && isExtremePost) {
+              // LE CENTRISTE QUI VEND SON ÂME AUX EXTRÊMES
+              // L'algorithme adore ça : gros bonus de vues et d'argent !
+              audienceChange += Math.floor(state.audience * 0.25) + 80; 
+              capitalGain = Math.floor(capitalGain * 1.5); 
+              // Mais ça lui coûte mentalement un peu plus cher qu'un vrai extrémiste (-12)
+              healthChange -= 12; 
+            } else if (dissonanceDistance === 2) {
+              // Controverse classique (ex: Gauche qui publie à Droite)
+              healthChange -= 10;
+              audienceChange -= Math.floor(state.audience * 0.10);
+              capitalGain = Math.floor(capitalGain * 0.5);
+            } else if (dissonanceDistance >= 3) {
+              // TRAHISON TOTALE : Grand écart politique
               healthChange -= 30;
               audienceChange = -Math.floor(state.audience * 0.35) - 100;
               capitalGain = Math.floor(capitalGain * 0.1);
@@ -212,29 +236,29 @@ export const useAppStore = create<GameState>()(
 
             audienceChange = Math.max(-state.audience, audienceChange);
 
-            // E. CHOIX DU FEEDBACK (Adapté pour signaler le soin)
-            if (dissonanceDistance >= 2) {
-              feedback =
-                "💥 BACKLASH : Votre base historique crie à la trahison ! Désabonnements massifs.";
+            // E. CHOIX DU FEEDBACK
+            if (dissonanceDistance >= 3) {
+              feedback = "💥 BACKLASH : Grand écart politique ! Désabonnements massifs.";
+            } else if (dissonanceDistance === 2 && isExtremePost) {
+              feedback = "🎭 OPPORTUNISME VIRAL : Jouer les extrêmes fait exploser vos vues, mais vous perdez votre âme.";
+            } else if (dissonanceDistance === 2) {
+              feedback = "⚠️ CONTROVERSE : Votre base historique est confuse face à ce positionnement.";
             } else if (
               dissonanceDistance === 0 &&
               tone === "nuance" &&
               engagementScore < 0
             ) {
-              feedback =
-                "🧘 CATHARSIS : L'algo vous ignore, mais exprimer sereinement vos vraies convictions vous a fait un bien fou.";
+              feedback = "🧘 CATHARSIS : L'algo vous ignore, mais exprimer sereinement vos vraies convictions vous a fait un bien fou.";
             } else if (engagementScore < 0) {
-              feedback =
-                "📉 FLOP : Trop nuancé ou trop long. L'algorithme X-Sphere a enterré votre post.";
+              feedback = "📉 FLOP : Trop nuancé ou trop long. L'algorithme X-Sphere a enterré votre post.";
             } else if (isTrending && tone === "radical") {
-              feedback =
-                "🔥 VIRALITÉ MAX : Votre indignation sur la tendance a explosé l'algorithme !";
+              feedback = "🔥 VIRALITÉ MAX : Votre indignation sur la tendance a explosé l'algorithme !";
             } else if (tone === "radical" || camp.includes("extreme")) {
-              feedback =
-                "📈 CLASH RENTABLE : Les vues montent, mais la toxicité des commentaires vous pèse.";
+              feedback = "📈 CLASH RENTABLE : Les vues montent, mais la toxicité des commentaires vous pèse.";
             } else {
               feedback = "📊 Votre audience réagit normalement.";
             }
+            
             // F. MISE À JOUR DE L'ÉTAT
             set((draft) => {
               draft.audience = Math.max(0, draft.audience + audienceChange);
@@ -256,7 +280,7 @@ export const useAppStore = create<GameState>()(
               draft.lastPostResult = {
                 audienceGain: audienceChange,
                 capitalGain : capitalGain,
-                healthLoss: -healthChange,
+                healthLoss: -healthChange, // On inverse le signe pour l'affichage (healthChange positif = gain de santé = healthLoss négatif)
                 feedback : feedback,
               };
 

@@ -22,8 +22,8 @@ export const SetupPage = () => {
   // et ainsi forcer le dilemme moral par la suite.
   const INITIAL_CAMPS: { id: Camp; label: string }[] = [
     { id: "gauche", label: "Gauche Modérée" },
-    { id: "droite", label: "Droite Modérée" },
     { id: "centre", label: "Centre Libéral" },
+    { id: "droite", label: "Droite Modérée" },
   ];
 
   return (
