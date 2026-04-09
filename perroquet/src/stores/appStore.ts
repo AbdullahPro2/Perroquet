@@ -1,22 +1,43 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { Theme, PlatformId, Camp, Format, Tone , PlatformConfig} from "../types/game";
+import type {
+  Theme,
+  PlatformId,
+  Camp,
+  Format,
+  Tone,
+  PlatformConfig,
+} from "../types/game";
 
 export const PLATFORMS_CONFIG: Record<PlatformId, PlatformConfig> = {
   xsphere: {
     id: "xsphere",
     name: "X-Sphere",
-    description: "Micro-blogging. L'algorithme adore l'indignation et le format court.",
+    description:
+      "Micro-blogging. L'algorithme adore l'indignation et le format court.",
     // Biais : Pousse au clash et au format court. Déteste la nuance.
-    bias: { formatCourt: 4, formatLong: -3, tonRadical: 5, tonNuance: -2, tendanceBoost: 5 },
+    bias: {
+      formatCourt: 4,
+      formatLong: -3,
+      tonRadical: 5,
+      tonNuance: -2,
+      tendanceBoost: 5,
+    },
   },
   vidtube: {
     id: "vidtube",
     name: "VidTube",
-    description: "Plateforme vidéo. Valorise la rétention, le format long et l'expertise.",
+    description:
+      "Plateforme vidéo. Valorise la rétention, le format long et l'expertise.",
     // Biais : Récompense l'effort (format long) et accepte mieux la nuance. Le clash marche un peu moins bien.
-    bias: { formatCourt: -2, formatLong: 5, tonRadical: 1, tonNuance: 4, tendanceBoost: 2 },
+    bias: {
+      formatCourt: -2,
+      formatLong: 5,
+      tonRadical: 1,
+      tonNuance: 4,
+      tendanceBoost: 2,
+    },
   },
 };
 
@@ -32,7 +53,7 @@ interface GameState {
   theme: "light" | "dark";
   hasSeenIntro: boolean;
   platform: PlatformId | null;
-  initialCamp: Camp | null; 
+  initialCamp: Camp | null;
 
   audience: number;
   capital: number;
@@ -53,6 +74,7 @@ interface GameState {
 
   actions: {
     // MODIFIÉ : Accepte le camp initial lors du setup
+    markIntroSeen: () => void;
     setupIdentity: (platform: PlatformId, initialCamp: Camp) => void;
     buyTool: (tool: "trendAnalyzer" | "politicalDoc", cost: number) => void;
     publishContent: (
@@ -82,8 +104,7 @@ export const useAppStore = create<GameState>()(
   devtools(
     persist(
       immer((set, get) => ({
-        hasSeenIntro: false, 
-        sidebarOpen: true,
+        hasSeenIntro: false,
         sidebarOpen: true,
         theme: "dark",
         platform: null,
@@ -110,8 +131,6 @@ export const useAppStore = create<GameState>()(
         ],
 
         actions: {
-          
-          // markIntroSeen: () => void;
           markIntroSeen: () =>
             set((state) => {
               state.hasSeenIntro = true;
@@ -157,9 +176,10 @@ export const useAppStore = create<GameState>()(
             let healthChange = 0;
 
             // 1. Format
-            engagementScore += format === "court" 
-              ? currentPlatformConfig.bias.formatCourt 
-              : currentPlatformConfig.bias.formatLong;
+            engagementScore +=
+              format === "court"
+                ? currentPlatformConfig.bias.formatCourt
+                : currentPlatformConfig.bias.formatLong;
 
             // 2. Ton
             if (tone === "radical") {
@@ -177,10 +197,10 @@ export const useAppStore = create<GameState>()(
 
             // 4. Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
             if (camp === "extreme_gauche" || camp === "extreme_droite") {
-              engagementScore += 2; 
+              engagementScore += 2;
               healthChange -= 10;
             }
-            
+
             // C. CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
             let audienceChange = 0;
             let capitalGain = Math.floor(
@@ -264,14 +284,17 @@ export const useAppStore = create<GameState>()(
 
               draft.lastPostResult = {
                 audienceGain: audienceChange,
-                capitalGain : capitalGain,
+                capitalGain: capitalGain,
                 healthLoss: -healthChange,
-                feedback : feedback,
+                feedback: feedback,
               };
 
               if (Math.random() > 0.7) {
-                const otherThemes = ALL_THEMES.filter((t) => t !== draft.currentTrend);
-                draft.currentTrend = otherThemes[Math.floor(Math.random() * otherThemes.length)];
+                const otherThemes = ALL_THEMES.filter(
+                  (t) => t !== draft.currentTrend,
+                );
+                draft.currentTrend =
+                  otherThemes[Math.floor(Math.random() * otherThemes.length)];
               }
             });
 
