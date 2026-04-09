@@ -15,7 +15,7 @@ export const StudioPage = () => {
   }, [mentalHealth, navigate]);
 
   const { currentTrend, hasTrendAnalyzer, hasPoliticalDoc, postHistory } = useAppStore();
-  const { publishContent } = useAppStore((state) => state.actions);
+  // const { publishContent } = useAppStore((state) => state.actions);
 
   const [camp, setCamp] = useState<Camp>("gauche");
   const [theme, setTheme] = useState<Theme>("ecologie");
@@ -25,8 +25,9 @@ export const StudioPage = () => {
   const [lastPostFeedback, setLastPostFeedback] = useState<string | null>(null);
 
   const handlePublish = () => {
-    const result = publishContent(camp, theme, format, tone);
-    setLastPostFeedback(result.feedback);
+    navigate("/publishing", { state: { camp, theme, format, tone } });
+    // const result = publishContent(camp, theme, format, tone);
+    // setLastPostFeedback(result.feedback);
   };
 
   const CAMPS: { id: Camp; label: string }[] = [
@@ -48,6 +49,7 @@ export const StudioPage = () => {
     <div className="grid grid-cols-12 gap-6 h-full">
       <div className="col-span-6 bg-slate-800 rounded-2xl shadow-xl border border-slate-700 flex flex-col overflow-hidden">
         
+        {/* ... (TOUT LE HAUT RESTE IDENTIQUE) ... */}
         <div className="p-6 border-b border-slate-700 bg-slate-800/50 flex flex-col gap-4">
           <h2 className="text-xl font-black text-white">Nouvelle Publication</h2>
           {hasTrendAnalyzer ? (
@@ -69,7 +71,6 @@ export const StudioPage = () => {
             <span className="text-xs font-bold text-slate-400 uppercase mb-2 block">Camp Politique</span>
             <div className="flex flex-wrap gap-2">
               {CAMPS.map((c) => {
-                // LA LOGIQUE DE VERROUILLAGE :
                 const isExtreme = c.id === "extreme_gauche" || c.id === "extreme_droite";
                 const isDisabled = isExtreme && !hasPoliticalDoc;
 
@@ -98,6 +99,7 @@ export const StudioPage = () => {
             )}
           </div>
 
+          {/* SECTION DES THÈMES */}
           <div>
             <span className="text-xs font-bold text-slate-400 uppercase mb-2 block">Thème Abordé</span>
             <div className="grid grid-cols-4 gap-2">
@@ -168,14 +170,8 @@ export const StudioPage = () => {
         </div>
       </div>
 
+      {/* ZONE DE GRAPHIQUE SEULE (Feedback retiré) */}
       <div className="col-span-6 flex flex-col gap-6">
-        <div className="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 p-6 min-h-[120px] flex items-center justify-center text-center">
-          {lastPostFeedback ? (
-            <p className="text-lg font-bold text-white">{lastPostFeedback}</p>
-          ) : (
-            <p className="text-slate-500">L'algorithme attend votre publication...</p>
-          )}
-        </div>
         <div className="flex-1">
           <SimulationChart data={postHistory} />
         </div>

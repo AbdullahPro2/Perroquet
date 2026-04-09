@@ -3,6 +3,13 @@ import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import type { Theme, PlatformId, Camp, Format, Tone } from "../types/game";
 
+export interface PostResult {
+  audienceGain: number;
+  capitalGain: number;
+  healthLoss: number;
+  feedback: string;
+}
+
 interface GameState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
@@ -13,6 +20,7 @@ interface GameState {
   currentTrend: Theme;
   hasTrendAnalyzer: boolean;
   hasPoliticalDoc: boolean;
+  lastPostResult: PostResult | null;
 
   postCount: number;
   postHistory: Array<{
@@ -53,6 +61,7 @@ export const useAppStore = create<GameState>()(
         // Les achats sont bien à false par défaut
         hasTrendAnalyzer: false,
         hasPoliticalDoc: false,
+        lastPostResult: null,
 
         postCount: 0,
         postHistory: [
@@ -149,6 +158,13 @@ export const useAppStore = create<GameState>()(
                 audience: draft.audience,
                 mentalHealth: draft.mentalHealth,
               });
+
+              draft.lastPostResult = {
+                audienceGain,
+                capitalGain,
+                healthLoss,
+                feedback,
+              };
 
               if (Math.random() > 0.7) {
                 const otherThemes = ALL_THEMES.filter((t) => t !== draft.currentTrend);

@@ -4,6 +4,8 @@ import { SetupPage } from "../pages/SetupPage";
 import { StudioPage } from "../pages/StudioPage";
 import { ShopPage } from "../pages/ShopPage";
 import { GameOverPage } from "../pages/GameOverPage";
+import { PublishingPage } from "../pages/PublishingPage";
+import { ResultPage } from "../pages/ResultPage";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +27,14 @@ export const router = createBrowserRouter([
       {
         path: "shop",
         element: <ShopPage />,
+      },
+      {
+        path: "publishing",
+        element: <PublishingPage />,
+      },
+      {
+        path: "result",
+        element: <ResultPage />,
       }
     ],
   },
