@@ -40,7 +40,7 @@ export const ResultPage = () => {
           
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
             <span className="text-slate-400 font-bold uppercase text-xs tracking-wider">Revenus générés</span>
-            <span className="text-xl font-black text-amber-500">+{capitalGain} €</span>
+            <span className="text-xl font-black text-emerald-500">+{capitalGain} €</span>
           </div>
           
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">

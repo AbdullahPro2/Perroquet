@@ -234,7 +234,7 @@ export const useAppStore = create<GameState>()(
               draft.lastPostResult = {
                 audienceGain: audienceChange,
                 capitalGain : capitalGain,
-                healthLoss: -healthChange,
+                healthLoss: healthChange,
                 feedback : feedback,
               };
 
