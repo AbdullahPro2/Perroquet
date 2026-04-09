@@ -86,16 +86,16 @@ Un tableau de bord permet de surveiller l'équilibre fragile entre la croissance
 
 ### Simulation : chaque post correspond à une semaine qui passe
 
-**Variables du post :** 
+** Variables du post: ** 
 
 Le post possède un camp (Extrême gauche, Gauche, Centre, Droite, Extrême droite), un format (court / long), un thème (Immigration, Écologie, Guerre, Avancé scientifique, …) et un ton (Nuancé/Radical).
 
-**L'Algorithme de la Plateforme :** 
+** L'Algorithme de la Plateforme :** 
 
 Chaque réseau social possède un multiplicateur caché.
 X-Sphere : Multiplicateur positif sur les contenus Courts + Radicaux. Multiplicateur négatif sur les contenus Longs + Nuancés.
 
-**Calcul de l'Impact :**
+** Calcul de l'Impact : **
 
 Lorsqu'un contenu est publié, l'algorithme confronte les paramètres du contenu (nombre d’abonnées actuel, ton, format, alignement) à son algorithme interne.
 Si le contenu correspond à ce qu'attends l'algorithme et ce qui intéresse les utilisateurs du réseau social, le joueur gagne un fort bonus d'Audience et de Capital.
@@ -128,6 +128,7 @@ Une liste chronologique récapitulant les posts précédents, affichant pour cha
 
 
 #### Actions du joueur
+
 À chaque tour de jeu (qui correspond à une semaine écoulée), le joueur interagit avec son tableau de bord pour effectuer les actions suivantes :
 
 **Publier du contenu :** 
@@ -142,28 +143,28 @@ Décider de modifier drastiquement ses paramètres habituels pour s'adapter à l
 ### Scénarios
 
 
-**Scénario d'introduction et la découverte de la méta:**
+** Scénario d'introduction et la découverte de la méta: **
 
 En début de partie, le joueur a la possibilité de mener une phase de test en publiant différents types de contenus (neutres ou légèrement orientés) sur plusieurs réseaux sociaux distincts. L'objectif de ce scénario est de forcer le joueur à analyser les données de ses premiers échecs et succès pour comprendre par lui-même quels critères sont favorisés par l'algorithme de chaque plateforme.
 
 
-**Scénario de crise : Le changement de camp politique:**
+** Scénario de crise : Le changement de camp politique: **
 
 Si, au cours de la partie, le joueur décide de modifier radicalement sa ligne éditoriale et de changer de camp politique tout en conservant son canal principal (même compte, mêmes thématiques générales), il déclenche un événement de crise. L'audience réagit violemment à cette dissonance : le joueur subit une perte drastique d'abonnés de sa base initiale, une chute de ses vues, et un impact critique sur sa jauge de Santé Mentale en raison du harcèlement ("backlash") généré par sa propre communauté.
 
 
 ### Contraintes de développement
 
-**Contraintes temporelles et de gestion:**
-**Développement ultra-court :**
+** Contraintes temporelles et de gestion: **
+** Développement ultra-court : **
 
 Le jeu entier, de la conception au déploiement, doit être achevé en deux jours. Aucune fonctionnalité superflue ne doit être développée avant que la boucle de gameplay principale (Publier -> Analyser -> Gagner/Perdre des stats) ne soit fonctionnelle.
 
-**Zéro Back-end :**
+** Zéro Back-end : **
 
 Par manque de temps, il n'y aura ni base de données externe ni gestion de comptes utilisateurs complexes. La sauvegarde de la progression (si elle existe) se fera uniquement en local via le localStorage du navigateur.
 
-**Contraintes graphiques et ergonomiques :**
+** Contraintes graphiques et ergonomiques : **
 
 Interface : Le design sera purement utilitaire et minimaliste. Pas de création d'assets graphiques complexes. L'immersion reposera sur l'aspect "tableau de bord de moniteur" utilisant des bibliothèques de composants prêtes à l'emploi.
 
@@ -172,6 +173,7 @@ Interface : Le design sera purement utilitaire et minimaliste. Pas de création 
 #### Scénarios Avancés:
 
 **Scénario de l'impact dans le monde réel:**
+
 Un écran de fin généré dynamiquement en fonction des jauges finales du joueur révèle les conséquences concrètes de son influence sur la société mais aussi l’impact sur sa santé mentale.
 
 #### Fonctionnalités Avancées:
