@@ -32,9 +32,13 @@ export const ResultPage = () => {
         {/* Les stats */}
         <div className="space-y-4 text-left mt-2">
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
-            <span className="text-slate-400 font-bold uppercase text-xs tracking-wider">Abonnés gagnés</span>
-            <span className={`text-xl font-black ${audienceGain >= 0 ? "text-blue-500" : "text-rose-500"}`}>
-              {audienceGain >= 0 ? `+${audienceGain}` : audienceGain}
+            <span className="text-slate-400 font-bold uppercase text-xs tracking-wider">
+              {/* Le texte s'adapte automatiquement */}
+              {audienceGain >= 0 ? "Abonnés gagnés" : "Abonnés perdus"}
+            </span>
+            <span className={`text-xl font-black ${audienceGain >= 0 ? 'text-blue-500' : 'text-rose-500'}`}>
+              {/* On affiche un "+" si c'est positif. Si c'est négatif, le signe "-" y est déjà. */}
+              {audienceGain > 0 ? `+${audienceGain}` : audienceGain}
             </span>
           </div>
           

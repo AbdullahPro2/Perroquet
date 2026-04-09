@@ -190,6 +190,8 @@ export const useAppStore = create<GameState>()(
             );
             capitalGain = Math.floor(capitalGain * (Math.random() * 0.4 + 0.8));
 
+            audienceChange = Math.max(-state.audience, audienceChange);
+
             // E. CHOIX DU FEEDBACK (Adapté pour signaler le soin)
             if (dissonanceDistance >= 2) {
               feedback =
