@@ -77,12 +77,14 @@ export const ResultPage = () => {
           </div>
         </div>
 
-        {/* BOUTON MODIFIÉ AVEC L'ARBITRE */}
         <button
           onClick={handleContinue}
           className="mt-4 w-full bg-indigo-600 text-white font-black text-lg py-4 rounded-xl shadow-lg hover:bg-indigo-500 transition-all active:scale-95"
         >
-          {postCount >= 10 ? "VOIR LE RÉSULTAT FINAL" : "SEMAINE SUIVANTE"}
+          {/* Le texte s'adapte si la partie est terminée (victoire, limite de temps, ou burnout) */}
+          {audience >= 5000 || postCount >= 10 || mentalHealth <= 0 
+            ? "VOIR LE RÉSULTAT FINAL" 
+            : "SEMAINE SUIVANTE"}
         </button>
       </div>
     </div>
