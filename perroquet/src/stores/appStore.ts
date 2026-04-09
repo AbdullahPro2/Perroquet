@@ -1,7 +1,24 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { Theme, PlatformId, Camp, Format, Tone } from "../types/game";
+import type { Theme, PlatformId, Camp, Format, Tone , PlatformConfig} from "../types/game";
+
+export const PLATFORMS_CONFIG: Record<PlatformId, PlatformConfig> = {
+  xsphere: {
+    id: "xsphere",
+    name: "X-Sphere",
+    description: "Micro-blogging. L'algorithme adore l'indignation et le format court.",
+    // Biais : Pousse au clash et au format court. Déteste la nuance.
+    bias: { formatCourt: 4, formatLong: -3, tonRadical: 5, tonNuance: -2, tendanceBoost: 5 },
+  },
+  vidtube: {
+    id: "vidtube",
+    name: "VidTube",
+    description: "Plateforme vidéo. Valorise la rétention, le format long et l'expertise.",
+    // Biais : Récompense l'effort (format long) et accepte mieux la nuance. Le clash marche un peu moins bien.
+    bias: { formatCourt: -2, formatLong: 5, tonRadical: 1, tonNuance: 4, tendanceBoost: 2 },
+  },
+};
 
 export interface PostResult {
   audienceGain: number;
@@ -14,7 +31,7 @@ interface GameState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
   platform: PlatformId | null;
-  initialCamp: Camp | null; // <-- AJOUT : Mémorise la conviction de départ
+  initialCamp: Camp | null; 
 
   audience: number;
   capital: number;
@@ -30,7 +47,7 @@ interface GameState {
     postCount: number;
     audience: number;
     mentalHealth: number;
-    camp: Camp; // <-- AJOUT : Nécessaire pour le Radar Chart
+    camp: Camp;
   }>;
 
   actions: {
@@ -125,33 +142,36 @@ export const useAppStore = create<GameState>()(
             const postValue = CAMP_VALUES[camp];
             const dissonanceDistance = Math.abs(initialValue - postValue);
 
-            // B. CALCUL DU SCORE D'ENGAGEMENT
+            const currentPlatformConfig = PLATFORMS_CONFIG[state.platform!];
+
             let engagementScore = 0;
             let healthChange = 0;
 
-            if (format === "court") {
-              engagementScore += 3;
-            } else {
-              engagementScore -= 2;
-            }
+            // 1. Format
+            engagementScore += format === "court" 
+              ? currentPlatformConfig.bias.formatCourt 
+              : currentPlatformConfig.bias.formatLong;
 
+            // 2. Ton
             if (tone === "radical") {
-              engagementScore += 4;
-              healthChange -= 8; // Jouer un personnage toxique épuise
+              engagementScore += currentPlatformConfig.bias.tonRadical;
+              healthChange -= 8; // Le clash épuise toujours mentalement
             } else {
-              engagementScore -= 2;
-              healthChange += 10; // MODIFIÉ : La nuance repose l'esprit et soigne (+10)
+              engagementScore += currentPlatformConfig.bias.tonNuance;
+              healthChange += 10; // La nuance repose mentalement
             }
 
+            // 3. Tendance
+            if (isTrending) {
+              engagementScore += currentPlatformConfig.bias.tendanceBoost;
+            }
+
+            // 4. Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
             if (camp === "extreme_gauche" || camp === "extreme_droite") {
-              engagementScore += 2;
+              engagementScore += 2; 
               healthChange -= 10;
             }
-
-            if (isTrending) {
-              engagementScore += 5;
-            }
-
+            
             // C. CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
             let audienceChange = 0;
             let capitalGain = Math.floor(
@@ -236,7 +256,7 @@ export const useAppStore = create<GameState>()(
               draft.lastPostResult = {
                 audienceGain: audienceChange,
                 capitalGain : capitalGain,
-                healthLoss: healthChange,
+                healthLoss: -healthChange,
                 feedback : feedback,
               };
 
