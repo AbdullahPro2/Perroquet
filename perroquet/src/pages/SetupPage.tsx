@@ -29,7 +29,7 @@ export const SetupPage = () => {
     <div className="h-screen w-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
         <h1 className="text-3xl font-black text-slate-800 text-center mb-2">
-          Algorithm Architect
+          Perroquet
         </h1>
         <p className="text-slate-500 text-center mb-8">
           Choisissez vos convictions intimes et votre arène de départ.

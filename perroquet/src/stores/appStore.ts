@@ -12,6 +12,7 @@ interface GameState {
   mentalHealth: number;
   currentTrend: Theme;
   hasTrendAnalyzer: boolean;
+  hasPoliticalDoc: boolean;
 
   postCount: number;
   postHistory: Array<{
@@ -23,15 +24,15 @@ interface GameState {
 
   actions: {
     setupIdentity: (platform: PlatformId) => void;
-    buyTool: (tool: "trendAnalyzer", cost: number) => void;
+    // Signature mise à jour pour les deux achats
+    buyTool: (tool: "trendAnalyzer" | "politicalDoc", cost: number) => void;
     publishContent: (
       camp: Camp,
       themeChoice: Theme,
       format: Format,
       tone: Tone
     ) => { feedback: string };
-    
-    resetGame: () => void; 
+    resetGame: () => void;
   };
 }
 
@@ -48,7 +49,10 @@ export const useAppStore = create<GameState>()(
         capital: 50,
         mentalHealth: 100,
         currentTrend: ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)],
+        
+        // Les achats sont bien à false par défaut
         hasTrendAnalyzer: false,
+        hasPoliticalDoc: false,
 
         postCount: 0,
         postHistory: [
@@ -61,14 +65,21 @@ export const useAppStore = create<GameState>()(
               state.platform = platform;
             }),
 
+          // LA NOUVELLE FONCTION D'ACHAT SÉCURISÉE
           buyTool: (tool, cost) =>
             set((state) => {
-              if (state.capital >= cost && !state.hasTrendAnalyzer) {
-                state.hasTrendAnalyzer = true;
-                state.capital -= cost;
+              if (state.capital >= cost) {
+                if (tool === "trendAnalyzer" && !state.hasTrendAnalyzer) {
+                  state.hasTrendAnalyzer = true;
+                  state.capital -= cost;
+                } else if (tool === "politicalDoc" && !state.hasPoliticalDoc) {
+                  state.hasPoliticalDoc = true;
+                  state.capital -= cost;
+                }
               }
             }),
 
+          // LA LOGIQUE DE PUBLICATION (Avec pénalité pour les Extrêmes)
           publishContent: (camp, themeChoice, format, tone) => {
             const state = get();
             let feedback = "";
@@ -79,6 +90,7 @@ export const useAppStore = create<GameState>()(
             let capitalGain = 10;
             let healthLoss = 0;
 
+            // Biais de format 
             if (format === "court") {
               audienceGain *= 2;
               capitalGain *= 2;
@@ -87,31 +99,44 @@ export const useAppStore = create<GameState>()(
               capitalGain = 0; 
             }
 
+            // Biais de ton 
             if (tone === "radical") {
               audienceGain *= 3;
               capitalGain *= 3;
-              healthLoss += 15; 
+              healthLoss += 10; // Le clash fatigue
             } else {
-              healthLoss -= 5; 
+              healthLoss -= 5; // La nuance fait du bien
             }
 
+            // Biais d'extrême (Baisse la santé mentale car trahit la modération)
+            if (camp === "extreme_gauche" || camp === "extreme_droite") {
+              audienceGain = Math.floor(audienceGain * 1.5); // L'extrême booste un peu les vues
+              healthLoss += 15; // Mais détruit la santé mentale !
+            }
+
+            // Multiplicateur de tendance
             if (isTrending) {
               audienceGain = Math.floor(audienceGain * 1.5);
               capitalGain = Math.floor(capitalGain * 1.5);
             }
 
+            // Aléatoire
             audienceGain = Math.floor(audienceGain * (Math.random() * 0.4 + 0.8));
 
+            // Feedback texte
             if (isTrending && tone === "radical") {
               feedback = "🔥 SURF SUR LA TENDANCE : L'algo s'emballe !";
             } else if (!isTrending && format === "long") {
               feedback = "📉 HORS-SUJET : Format trop long pour cette plateforme.";
+            } else if (camp.includes("extreme")) {
+              feedback = "🚨 POLÉMIQUE : Vos propos extrêmes font le buzz, mais à quel prix ?";
             } else if (tone === "radical") {
               feedback = "📈 CLASH RÉUSSI : L'algorithme a adoré votre indignation.";
             } else {
               feedback = "📊 PUBLICATION STANDARD.";
             }
 
+            // Mise à jour finale
             set((draft) => {
               draft.audience += audienceGain;
               draft.capital += capitalGain;
@@ -136,6 +161,7 @@ export const useAppStore = create<GameState>()(
         
           resetGame: () =>
             set((draft) => {
+              // Réinitialisation de tout à zéro
               draft.audience = 100;
               draft.capital = 50;
               draft.mentalHealth = 100;
@@ -144,10 +170,12 @@ export const useAppStore = create<GameState>()(
                 { id: "0", postCount: 0, audience: 100, mentalHealth: 100 },
               ];
               draft.platform = null; 
+              draft.hasTrendAnalyzer = false;
+              draft.hasPoliticalDoc = false;
             }),
         },
       })),
-      { name: "perroquet-game-v2" },
+      { name: "perroquet-game-v4" },
     ),
   ),
 );
