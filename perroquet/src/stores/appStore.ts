@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-// ON IMPORTE BIEN LES NOUVEAUX TYPES ICI :
 import type { Theme, PlatformId, Camp, Format, Tone } from "../types/game";
 
 interface GameState {
@@ -25,17 +24,17 @@ interface GameState {
   actions: {
     setupIdentity: (platform: PlatformId) => void;
     buyTool: (tool: "trendAnalyzer", cost: number) => void;
-    // LA SIGNATURE DOIT CORRESPONDRE AUX BOUTONS DE TON INTERFACE :
     publishContent: (
       camp: Camp,
       themeChoice: Theme,
       format: Format,
       tone: Tone
     ) => { feedback: string };
+    
+    resetGame: () => void; 
   };
 }
 
-// LES NOUVEAUX THÈMES POUR L'ANALYSEUR DE TENDANCE :
 const ALL_THEMES: Theme[] = ["immigration", "ecologie", "guerre", "science"];
 
 export const useAppStore = create<GameState>()(
@@ -48,7 +47,6 @@ export const useAppStore = create<GameState>()(
         audience: 100,
         capital: 50,
         mentalHealth: 100,
-        // On initialise avec une tendance valide
         currentTrend: ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)],
         hasTrendAnalyzer: false,
 
@@ -71,7 +69,6 @@ export const useAppStore = create<GameState>()(
               }
             }),
 
-          // LA LOGIQUE DE PUBLICATION :
           publishContent: (camp, themeChoice, format, tone) => {
             const state = get();
             let feedback = "";
@@ -82,7 +79,6 @@ export const useAppStore = create<GameState>()(
             let capitalGain = 10;
             let healthLoss = 0;
 
-            // Biais de format 
             if (format === "court") {
               audienceGain *= 2;
               capitalGain *= 2;
@@ -91,7 +87,6 @@ export const useAppStore = create<GameState>()(
               capitalGain = 0; 
             }
 
-            // Biais de ton 
             if (tone === "radical") {
               audienceGain *= 3;
               capitalGain *= 3;
@@ -100,16 +95,13 @@ export const useAppStore = create<GameState>()(
               healthLoss -= 5; 
             }
 
-            // Multiplicateur de tendance
             if (isTrending) {
               audienceGain = Math.floor(audienceGain * 1.5);
               capitalGain = Math.floor(capitalGain * 1.5);
             }
 
-            // Aléatoire
             audienceGain = Math.floor(audienceGain * (Math.random() * 0.4 + 0.8));
 
-            // Feedback texte
             if (isTrending && tone === "radical") {
               feedback = "🔥 SURF SUR LA TENDANCE : L'algo s'emballe !";
             } else if (!isTrending && format === "long") {
@@ -120,7 +112,6 @@ export const useAppStore = create<GameState>()(
               feedback = "📊 PUBLICATION STANDARD.";
             }
 
-            // Mise à jour finale
             set((draft) => {
               draft.audience += audienceGain;
               draft.capital += capitalGain;
@@ -142,6 +133,18 @@ export const useAppStore = create<GameState>()(
 
             return { feedback };
           },
+        
+          resetGame: () =>
+            set((draft) => {
+              draft.audience = 100;
+              draft.capital = 50;
+              draft.mentalHealth = 100;
+              draft.postCount = 0;
+              draft.postHistory = [
+                { id: "0", postCount: 0, audience: 100, mentalHealth: 100 },
+              ];
+              draft.platform = null; 
+            }),
         },
       })),
       { name: "perroquet-game-v2" },

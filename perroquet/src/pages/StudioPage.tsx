@@ -4,7 +4,21 @@ import { useAppStore } from "../stores/appStore";
 import type { Theme, Camp } from "../types/game"; 
 import { SimulationChart } from "../features/dashboard/components/SimulationChart";
 
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 export const StudioPage = () => {
+  const navigate = useNavigate();
+  // On récupère la santé mentale depuis le store
+  const mentalHealth = useAppStore((state) => state.mentalHealth);
+
+  // Le "Watcher" : si la santé mentale tombe à 0, on expulse le joueur
+  useEffect(() => {
+    if (mentalHealth <= 0) {
+      navigate("/game-over");
+    }
+  }, [mentalHealth, navigate]);
+
   const { currentTrend, hasTrendAnalyzer, postHistory } = useAppStore();
   const { publishContent } = useAppStore((state) => state.actions);
 
@@ -17,8 +31,6 @@ export const StudioPage = () => {
   const [lastPostFeedback, setLastPostFeedback] = useState<string | null>(null);
 
   const handlePublish = () => {
-    // Attention : Il faudra ajuster publishContent dans ton appStore.ts 
-    // pour qu'il prenne (camp, theme, format, tone)
     const result = publishContent(camp, theme, format, tone);
     setLastPostFeedback(result.feedback);
   };
