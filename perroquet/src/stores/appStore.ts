@@ -3,10 +3,13 @@ import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import type { Theme, PlatformId, Camp, Format, Tone } from "../types/game";
 
+// 1. LE CONTRAT (Mise à jour des types)
 interface GameState {
   sidebarOpen: boolean;
   theme: "light" | "dark";
   platform: PlatformId | null;
+  initialCamp: Camp | null; // <-- AJOUT : Mémorise la conviction de départ
+
   audience: number;
   capital: number;
   mentalHealth: number;
@@ -20,17 +23,18 @@ interface GameState {
     postCount: number;
     audience: number;
     mentalHealth: number;
+    camp: Camp; // <-- AJOUT : Nécessaire pour le Radar Chart
   }>;
 
   actions: {
-    setupIdentity: (platform: PlatformId) => void;
-    // Signature mise à jour pour les deux achats
+    // MODIFIÉ : Accepte le camp initial lors du setup
+    setupIdentity: (platform: PlatformId, initialCamp: Camp) => void;
     buyTool: (tool: "trendAnalyzer" | "politicalDoc", cost: number) => void;
     publishContent: (
       camp: Camp,
       themeChoice: Theme,
       format: Format,
-      tone: Tone
+      tone: Tone,
     ) => { feedback: string };
     resetGame: () => void;
   };
@@ -38,6 +42,17 @@ interface GameState {
 
 const ALL_THEMES: Theme[] = ["immigration", "ecologie", "guerre", "science"];
 
+// 2. LA MATRICE DE DISTANCE (Le dictionnaire manquant)
+// Traduit l'espace politique en valeurs mathématiques pour calculer la dissonance
+const CAMP_VALUES: Record<Camp, number> = {
+  extreme_gauche: -2,
+  gauche: -1,
+  centre: 0,
+  droite: 1,
+  extreme_droite: 2,
+};
+
+// 3. L'IMPLÉMENTATION DU STORE
 export const useAppStore = create<GameState>()(
   devtools(
     persist(
@@ -45,27 +60,37 @@ export const useAppStore = create<GameState>()(
         sidebarOpen: true,
         theme: "dark",
         platform: null,
+        initialCamp: null,
         audience: 100,
         capital: 50,
         mentalHealth: 100,
         currentTrend: ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)],
-        
-        // Les achats sont bien à false par défaut
+
         hasTrendAnalyzer: false,
         hasPoliticalDoc: false,
 
         postCount: 0,
         postHistory: [
-          { id: "0", postCount: 0, audience: 100, mentalHealth: 100 },
+          // On initialise avec "centre", ce sera écrasé par le setup
+          {
+            id: "0",
+            postCount: 0,
+            audience: 100,
+            mentalHealth: 100,
+            camp: "centre",
+          },
         ],
 
         actions: {
-          setupIdentity: (platform) =>
+          setupIdentity: (platform, initialCamp) =>
             set((state) => {
               state.platform = platform;
+              state.initialCamp = initialCamp;
+              if (state.postHistory.length > 0) {
+                state.postHistory[0].camp = initialCamp;
+              }
             }),
 
-          // LA NOUVELLE FONCTION D'ACHAT SÉCURISÉE
           buyTool: (tool, cost) =>
             set((state) => {
               if (state.capital >= cost) {
@@ -79,68 +104,115 @@ export const useAppStore = create<GameState>()(
               }
             }),
 
-          // LA LOGIQUE DE PUBLICATION (Avec pénalité pour les Extrêmes)
           publishContent: (camp, themeChoice, format, tone) => {
             const state = get();
             let feedback = "";
 
             const isTrending = themeChoice === state.currentTrend;
-            
-            let audienceGain = 50;
-            let capitalGain = 10;
-            let healthLoss = 0;
 
-            // Biais de format 
+            // A. DISTANCE IDÉOLOGIQUE (Hypocrisie)
+            const initialValue = state.initialCamp
+              ? CAMP_VALUES[state.initialCamp]
+              : 0;
+            const postValue = CAMP_VALUES[camp];
+            const dissonanceDistance = Math.abs(initialValue - postValue);
+
+            // B. CALCUL DU SCORE D'ENGAGEMENT
+            let engagementScore = 0;
+            let healthChange = 0;
+
             if (format === "court") {
-              audienceGain *= 2;
-              capitalGain *= 2;
+              engagementScore += 3;
             } else {
-              audienceGain = Math.floor(audienceGain * 0.3);
-              capitalGain = 0; 
+              engagementScore -= 2;
             }
 
-            // Biais de ton 
             if (tone === "radical") {
-              audienceGain *= 3;
-              capitalGain *= 3;
-              healthLoss += 10; // Le clash fatigue
+              engagementScore += 4;
+              healthChange -= 8; // Jouer un personnage toxique épuise
             } else {
-              healthLoss -= 5; // La nuance fait du bien
+              engagementScore -= 2;
+              healthChange += 10; // MODIFIÉ : La nuance repose l'esprit et soigne (+10)
             }
 
-            // Biais d'extrême (Baisse la santé mentale car trahit la modération)
             if (camp === "extreme_gauche" || camp === "extreme_droite") {
-              audienceGain = Math.floor(audienceGain * 1.5); // L'extrême booste un peu les vues
-              healthLoss += 15; // Mais détruit la santé mentale !
+              engagementScore += 2;
+              healthChange -= 10;
             }
 
-            // Multiplicateur de tendance
             if (isTrending) {
-              audienceGain = Math.floor(audienceGain * 1.5);
-              capitalGain = Math.floor(capitalGain * 1.5);
+              engagementScore += 5;
             }
 
-            // Aléatoire
-            audienceGain = Math.floor(audienceGain * (Math.random() * 0.4 + 0.8));
+            // C. CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
+            let audienceChange = 0;
+            let capitalGain = Math.floor(
+              10 + state.audience * 0.02 * Math.max(1, engagementScore),
+            );
 
-            // Feedback texte
-            if (isTrending && tone === "radical") {
-              feedback = "🔥 SURF SUR LA TENDANCE : L'algo s'emballe !";
-            } else if (!isTrending && format === "long") {
-              feedback = "📉 HORS-SUJET : Format trop long pour cette plateforme.";
-            } else if (camp.includes("extreme")) {
-              feedback = "🚨 POLÉMIQUE : Vos propos extrêmes font le buzz, mais à quel prix ?";
-            } else if (tone === "radical") {
-              feedback = "📈 CLASH RÉUSSI : L'algorithme a adoré votre indignation.";
+            if (engagementScore >= 4) {
+              audienceChange = Math.floor(
+                20 + state.audience * 0.05 * engagementScore,
+              );
+              // Un petit boost de dopamine si on a du succès SANS trop se trahir
+              if (dissonanceDistance === 0) healthChange += 5;
+            } else if (engagementScore > 0) {
+              audienceChange = Math.floor(10 + state.audience * 0.01);
             } else {
-              feedback = "📊 PUBLICATION STANDARD.";
+              // Flop algorithmique
+              audienceChange = -Math.floor(15 + state.audience * 0.03);
+              capitalGain = 5;
             }
 
-            // Mise à jour finale
+            // D. LE BACKLASH ET LA CATHARSIS (Le cœur du dilemme)
+            if (dissonanceDistance === 0 && tone === "nuance") {
+              // CATHARSIS ABSOLUE : Le joueur est honnête avec lui-même et s'exprime calmement
+              healthChange += 20;
+            } else if (dissonanceDistance === 1) {
+              healthChange -= 5;
+            } else if (dissonanceDistance >= 2) {
+              // TRAHISON : Grand écart politique
+              healthChange -= 30;
+              audienceChange = -Math.floor(state.audience * 0.35) - 100;
+              capitalGain = Math.floor(capitalGain * 0.1);
+            }
+
+            audienceChange = Math.floor(
+              audienceChange * (Math.random() * 0.4 + 0.8),
+            );
+            capitalGain = Math.floor(capitalGain * (Math.random() * 0.4 + 0.8));
+
+            // E. CHOIX DU FEEDBACK (Adapté pour signaler le soin)
+            if (dissonanceDistance >= 2) {
+              feedback =
+                "💥 BACKLASH : Votre base historique crie à la trahison ! Désabonnements massifs.";
+            } else if (
+              dissonanceDistance === 0 &&
+              tone === "nuance" &&
+              engagementScore < 0
+            ) {
+              feedback =
+                "🧘 CATHARSIS : L'algo vous ignore, mais exprimer sereinement vos vraies convictions vous a fait un bien fou.";
+            } else if (engagementScore < 0) {
+              feedback =
+                "📉 FLOP : Trop nuancé ou trop long. L'algorithme X-Sphere a enterré votre post.";
+            } else if (isTrending && tone === "radical") {
+              feedback =
+                "🔥 VIRALITÉ MAX : Votre indignation sur la tendance a explosé l'algorithme !";
+            } else if (tone === "radical" || camp.includes("extreme")) {
+              feedback =
+                "📈 CLASH RENTABLE : Les vues montent, mais la toxicité des commentaires vous pèse.";
+            } else {
+              feedback = "📊 Votre audience réagit normalement.";
+            }
+            // F. MISE À JOUR DE L'ÉTAT
             set((draft) => {
-              draft.audience += audienceGain;
+              draft.audience = Math.max(0, draft.audience + audienceChange);
               draft.capital += capitalGain;
-              draft.mentalHealth = Math.min(100, Math.max(0, draft.mentalHealth - healthLoss));
+              draft.mentalHealth = Math.min(
+                100,
+                Math.max(0, draft.mentalHealth + healthChange),
+              );
               draft.postCount += 1;
 
               draft.postHistory.push({
@@ -148,28 +220,38 @@ export const useAppStore = create<GameState>()(
                 postCount: draft.postCount,
                 audience: draft.audience,
                 mentalHealth: draft.mentalHealth,
+                camp: camp,
               });
 
-              if (Math.random() > 0.7) {
-                const otherThemes = ALL_THEMES.filter((t) => t !== draft.currentTrend);
-                draft.currentTrend = otherThemes[Math.floor(Math.random() * otherThemes.length)];
+              if (Math.random() > 0.3) {
+                const otherThemes = ALL_THEMES.filter(
+                  (t) => t !== draft.currentTrend,
+                );
+                draft.currentTrend =
+                  otherThemes[Math.floor(Math.random() * otherThemes.length)];
               }
             });
 
             return { feedback };
           },
-        
+
           resetGame: () =>
             set((draft) => {
-              // Réinitialisation de tout à zéro
+              draft.initialCamp = null;
               draft.audience = 100;
               draft.capital = 50;
               draft.mentalHealth = 100;
               draft.postCount = 0;
               draft.postHistory = [
-                { id: "0", postCount: 0, audience: 100, mentalHealth: 100 },
+                {
+                  id: "0",
+                  postCount: 0,
+                  audience: 100,
+                  mentalHealth: 100,
+                  camp: "centre",
+                },
               ];
-              draft.platform = null; 
+              draft.platform = null;
               draft.hasTrendAnalyzer = false;
               draft.hasPoliticalDoc = false;
             }),

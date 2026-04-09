@@ -10,10 +10,11 @@ export const SetupPage = () => {
   const [platform, setPlatform] = useState<PlatformId | null>(null);
   const navigate = useNavigate();
 
+  // Modifiez l'appel à la fonction pour transmettre le camp initial au Store
   const handleStart = () => {
     if (camp && platform) {
-      setupIdentity(platform);
-      navigate("/"); // Redirection immédiate vers le Dashboard
+      setupIdentity(platform, camp);
+      navigate("/");
     }
   };
 
@@ -22,7 +23,7 @@ export const SetupPage = () => {
   const INITIAL_CAMPS: { id: Camp; label: string }[] = [
     { id: "gauche", label: "Gauche Modérée" },
     { id: "droite", label: "Droite Modérée" },
-    { id: "centre", label: "Centre Libéral" }
+    { id: "centre", label: "Centre Libéral" },
   ];
 
   return (
@@ -36,7 +37,6 @@ export const SetupPage = () => {
         </p>
 
         <div className="space-y-6">
-          
           {/* SECTION 1 : CONVICTIONS */}
           <div>
             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3">
@@ -48,8 +48,8 @@ export const SetupPage = () => {
                   key={c.id}
                   onClick={() => setCamp(c.id)}
                   className={`p-3 rounded-xl border-2 font-bold transition-all ${
-                    camp === c.id 
-                      ? "border-indigo-600 bg-indigo-50 text-indigo-700" 
+                    camp === c.id
+                      ? "border-indigo-600 bg-indigo-50 text-indigo-700"
                       : "border-slate-200 text-slate-600 hover:border-slate-300"
                   }`}
                 >
@@ -65,18 +65,23 @@ export const SetupPage = () => {
               2. La Plateforme Cible
             </h2>
             <div className="grid grid-cols-2 gap-3">
-              
               {/* BOUTON X-SPHERE (Actif) */}
               <button
                 onClick={() => setPlatform("xsphere")}
                 className={`p-4 rounded-xl border-2 text-left transition-all ${
-                  platform === "xsphere" ? "border-indigo-600 bg-indigo-50" : "border-slate-200 hover:border-slate-300"
+                  platform === "xsphere"
+                    ? "border-indigo-600 bg-indigo-50"
+                    : "border-slate-200 hover:border-slate-300"
                 }`}
               >
-                <h3 className={`font-black ${platform === "xsphere" ? "text-indigo-700" : "text-slate-800"}`}>
+                <h3
+                  className={`font-black ${platform === "xsphere" ? "text-indigo-700" : "text-slate-800"}`}
+                >
                   X-Sphere
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">Micro-blogging et viralité rapide.</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Micro-blogging et viralité rapide.
+                </p>
               </button>
 
               {/* BOUTON VIDTUBE (Désactivé) */}
@@ -90,9 +95,10 @@ export const SetupPage = () => {
                     Bientôt
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">Plateforme vidéo format long.</p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Plateforme vidéo format long.
+                </p>
               </button>
-
             </div>
           </div>
 
