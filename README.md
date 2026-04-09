@@ -17,8 +17,6 @@
 
 
 **Un jeu Tycoon**
-
-
 Perroquet est un jeu de type Tycoon qui place le joueur dans la peau d'un streameur politique débutant devant choisir son camp et sa plateforme, et qui s'appuie sur une analyse approfondie des données de chaque contenu pour lui permettre de décrypter la mécanique cachée des algorithmes et de comprendre l'impact direct de ses choix éditoriaux.
 
 
@@ -30,14 +28,8 @@ Perroquet est un jeu de type Tycoon qui place le joueur dans la peau d'un stream
 
 
 ### Procédures d'installation et d'exécution
-
-
-
-
-## Cahier des charges
-
-
-Pour un exemple de ce qui est attenu, voir https://gitlab.unistra.fr/T234/t4-exemple
+Pour jouer cliquez sur le lien ci-dessous:
+https://perroquetpolitics.netlify.app/intro
 
 
 ### Objectifs pédagogiques
@@ -56,6 +48,8 @@ Lorsqu'un créateur fidélise une audience sur un créneau radical, l'audience f
 #### Références
 
 
+Référence 1:
+https://git.unistra.fr/arcalis/vin-26-t-4-b/-/blob/master/Refrences/Gamejam_Illkirch.pdf?ref_type=heads
 
 
 ### Description des fonctionnalités
@@ -73,8 +67,6 @@ X-Sphere : Multiplicateur positif sur les contenus Courts + Radicaux. Multiplica
 Lorsqu'un contenu est publié, l'algorithme confronte les paramètres du contenu (nombre d’abonnées actuel, ton, format, alignement) à son algorithme interne.
 Si le contenu correspond à ce qu'attends l'algorithme et ce qui intéresse les utilisateurs du réseau social, le joueur gagne un fort bonus d'Audience et de Capital.
 Si le joueur publie un contenu en contradiction avec ses convictions initiales pour suivre ce qui marche sur le réseau, sa jauge de Santé Mentale/Intégrité baisse proportionnellement.
-
-
 #### Interface
 L'interface est constituée des éléments suivants :
 L'interface se présente sous la forme d'un "Dashboard" (tableau de bord) immersif de créateur de contenu. Son design est purement utilitaire et minimaliste, regroupant toutes les actions et données sur un écran unique :
@@ -83,8 +75,6 @@ L'interface se présente sous la forme d'un "Dashboard" (tableau de bord) immers
 **Le Centre d'Analyse (Boutique) :** Une zone dédiée à l'achat et à la consultation de datas, affichant en les tendances actuelles et les mots-clés tendance une fois débloqués.
 **La Zone de Monitoring (Graphiques) :** Des graphiques dynamiques générés via Recharts. Elle inclut une courbe d'évolution temporelle (Capital vs Santé Mentale) et un "Radar Chart" illustrant visuellement le décalage entre les convictions initiales du joueur et le contenu qu'il publie réellement.
 **Le Fil d'Historique (Journal) :** Une liste chronologique récapitulant les posts précédents, affichant pour chacun les vues générées, l'argent gagné et le coût moral encaissé.
-
-
 #### Actions du joueur
 À chaque tour de jeu (qui correspond à une semaine écoulée), le joueur interagit avec son tableau de bord pour effectuer les actions suivantes :
 **Publier du contenu :** Définir les paramètres de son post hebdomadaire via des menus et curseurs en choisissant le **Camp** défendu, le **Thème** abordé, le **Format** (Court/Long) et le **Ton** (Nuancé/Radical), puis cliquer sur "Publier".
