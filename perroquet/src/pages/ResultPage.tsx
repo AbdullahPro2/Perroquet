@@ -4,7 +4,8 @@ import { useAppStore } from "../stores/appStore";
 
 export const ResultPage = () => {
   const navigate = useNavigate();
-  const lastPostResult = useAppStore((state) => state.lastPostResult);
+  
+  const { lastPostResult, postCount, audience, mentalHealth } = useAppStore();
 
   // Sécuriser la redirection dans un useEffect (Bonne pratique React)
   useEffect(() => {
@@ -17,6 +18,27 @@ export const ResultPage = () => {
   if (!lastPostResult) return null;
 
   const { audienceGain, capitalGain, healthLoss, feedback } = lastPostResult;
+
+  // --- L'ARBITRE DE FIN DE PARTIE ---
+  const handleContinue = () => {
+    if (mentalHealth <= 0) {
+      // MORT : Santé mentale à zéro
+      navigate("/game-over", { state: { reason: "burnout" } });
+    } 
+    else if (audience >= 5000) {
+      // VICTOIRE : Objectif atteint prématurément !
+      navigate("/victory");
+    } 
+    else if (postCount >= 10) {
+      // DÉFAITE : Temps écoulé sans atteindre les 5000
+      navigate("/game-over", { state: { reason: "timeout" } });
+    } 
+    else {
+      // ON CONTINUE : Le jeu suit son cours
+      navigate("/");
+    }
+  };
+  // ----------------------------------
 
   return (
     <div className="h-full flex items-center justify-center">
@@ -50,18 +72,17 @@ export const ResultPage = () => {
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
             <span className="text-slate-400 font-bold uppercase text-xs tracking-wider">Santé Mentale</span>
             <span className={`text-xl font-black ${healthLoss > 0 ? "text-rose-500" : "text-emerald-500"}`}>
-              {/* Correction de l'affichage dynamique */}
               {healthLoss > 0 ? `-${healthLoss}%` : `+${-healthLoss}% (Reposant)`}
             </span>
           </div>
         </div>
 
-        {/* Bouton de retour */}
+        {/* BOUTON MODIFIÉ AVEC L'ARBITRE */}
         <button
-          onClick={() => navigate("/")}
+          onClick={handleContinue}
           className="mt-4 w-full bg-indigo-600 text-white font-black text-lg py-4 rounded-xl shadow-lg hover:bg-indigo-500 transition-all active:scale-95"
         >
-          OK
+          {postCount >= 10 ? "VOIR LE RÉSULTAT FINAL" : "SEMAINE SUIVANTE"}
         </button>
       </div>
     </div>

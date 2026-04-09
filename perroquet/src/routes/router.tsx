@@ -6,6 +6,7 @@ import { ShopPage } from "../pages/ShopPage";
 import { GameOverPage } from "../pages/GameOverPage";
 import { PublishingPage } from "../pages/PublishingPage";
 import { ResultPage } from "../pages/ResultPage";
+import { VictoryPage } from "../pages/VictoryPage";
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
   {
     path: "/game-over",
     element: <GameOverPage />
+  },
+  {
+    path: "/victory",
+    element: <VictoryPage />
   },
   {
     path: "/",

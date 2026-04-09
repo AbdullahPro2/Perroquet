@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../stores/appStore";
 import type { Theme, Camp } from "../types/game"; 
@@ -6,28 +6,16 @@ import { SimulationChart } from "../features/dashboard/components/SimulationChar
 
 export const StudioPage = () => {
   const navigate = useNavigate();
-  const mentalHealth = useAppStore((state) => state.mentalHealth);
 
-  useEffect(() => {
-    if (mentalHealth <= 0) {
-      navigate("/game-over");
-    }
-  }, [mentalHealth, navigate]);
-
-  const { currentTrend, hasTrendAnalyzer, hasPoliticalDoc, postHistory } = useAppStore();
-  // const { publishContent } = useAppStore((state) => state.actions);
+  const { currentTrend, hasTrendAnalyzer, hasPoliticalDoc, postHistory, postCount } = useAppStore();
 
   const [camp, setCamp] = useState<Camp>("gauche");
   const [theme, setTheme] = useState<Theme>("ecologie");
   const [format, setFormat] = useState<"court" | "long">("court");
   const [tone, setTone] = useState<"nuance" | "radical">("nuance");
   
-  const [lastPostFeedback, setLastPostFeedback] = useState<string | null>(null);
-
   const handlePublish = () => {
     navigate("/publishing", { state: { camp, theme, format, tone } });
-    // const result = publishContent(camp, theme, format, tone);
-    // setLastPostFeedback(result.feedback);
   };
 
   const CAMPS: { id: Camp; label: string }[] = [
@@ -49,9 +37,17 @@ export const StudioPage = () => {
     <div className="grid grid-cols-12 gap-6 h-full">
       <div className="col-span-6 bg-slate-800 rounded-2xl shadow-xl border border-slate-700 flex flex-col overflow-hidden">
         
-        {/* ... (TOUT LE HAUT RESTE IDENTIQUE) ... */}
+        {/* NOUVEL EN-TÊTE : Affiche l'objectif de 5000 abonnés et la semaine en cours */}
         <div className="p-6 border-b border-slate-700 bg-slate-800/50 flex flex-col gap-4">
-          <h2 className="text-xl font-black text-white">Nouvelle Publication</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-black text-white">Création</h2>
+            <div className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 flex items-center gap-3 shadow-inner">
+              <span className="text-slate-400 font-bold text-sm">Semaine {postCount + 1}/10</span>
+              <div className="h-4 w-px bg-slate-700"></div>
+              <span className="text-indigo-400 font-black text-sm"> Objectif : 5 000 abonnés</span>
+            </div>
+          </div>
+
           {hasTrendAnalyzer ? (
             <div className="bg-amber-900/30 border border-amber-500/50 rounded-lg p-3 flex justify-between items-center">
               <span className="text-xs font-bold text-amber-500 uppercase">📡 Tendance de la semaine</span>
@@ -170,7 +166,6 @@ export const StudioPage = () => {
         </div>
       </div>
 
-      {/* ZONE DE GRAPHIQUE SEULE (Feedback retiré) */}
       <div className="col-span-6 flex flex-col gap-6">
         <div className="flex-1">
           <SimulationChart data={postHistory} />

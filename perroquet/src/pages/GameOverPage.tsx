@@ -1,17 +1,17 @@
 import { useAppStore } from "../stores/appStore";
+import { useLocation } from "react-router-dom"; // <-- 1. AJOUT DE L'IMPORT
 
 export const GameOverPage = () => {
-  // On récupère juste les stats pour l'affichage
   const audience = useAppStore((state) => state.audience);
   const capital = useAppStore((state) => state.capital);
   const postCount = useAppStore((state) => state.postCount);
 
+  // 2. ON RÉCUPÈRE LA RAISON DE LA DÉFAITE
+  const location = useLocation();
+  const reason = location.state?.reason || "burnout";
+
   const handleRestart = () => {
-    // 1. On détruit la sauvegarde persistante directement dans le navigateur
     localStorage.removeItem("perroquet-game-v4"); 
-    
-    // 2. On force un rechargement complet (hard-reload) vers la page setup
-    // Cela réinitialise entièrement React et Zustand, garantissant un jeu neuf à 100%
     window.location.href = "/setup";
   };
 
@@ -19,11 +19,16 @@ export const GameOverPage = () => {
     <div className="min-h-screen w-full overflow-hidden bg-slate-950 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-rose-500/30 rounded-2xl shadow-2xl shadow-rose-900/20 p-8 max-w-lg w-full text-center">
         
+        {/* 3. TITRE DYNAMIQUE */}
         <h1 className="text-5xl font-black text-rose-600 mb-2 uppercase tracking-widest">
-          Burn Out
+          {reason === "burnout" ? "Burn Out" : "Flop Total"}
         </h1>
+        
+        {/* 4. TEXTE DYNAMIQUE */}
         <p className="text-slate-400 mb-8">
-          Votre santé mentale a atteint 0%. L'algorithme a eu raison de vos convictions.
+          {reason === "burnout" 
+            ? "Votre santé mentale a atteint 0%. L'algorithme a eu raison de vos convictions."
+            : "Les 10 semaines sont écoulées et vous n'avez pas atteint les 5 000 abonnés. L'algorithme vous a oublié."}
         </p>
 
         <div className="bg-slate-800 rounded-lg p-6 mb-8 text-left space-y-4">
@@ -32,7 +37,8 @@ export const GameOverPage = () => {
           </h2>
           <div className="flex justify-between">
             <span className="text-slate-400">Publications :</span>
-            <span className="font-bold text-white">{postCount} semaines</span>
+            {/* 5. ON AFFICHE LE NOMBRE DE SEMAINE SUR 10 */}
+            <span className="font-bold text-white">{postCount} / 10 semaines</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-400">Audience finale :</span>
