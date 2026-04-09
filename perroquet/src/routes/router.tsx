@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RootLayout } from "../layouts/RootLayout";
-import { SetupPage } from "../pages/SetupPage"; // Plus tard dans /features/onboarding
-import { StudioPage } from "../pages/StudioPage"; // Plus tard dans /features/dashboard
+import { SetupPage } from "../pages/SetupPage";
+import { StudioPage } from "../pages/StudioPage";
 import { ShopPage } from "../pages/ShopPage";
+import { GameOverPage } from "../pages/GameOverPage";
 
 export const router = createBrowserRouter([
   {
@@ -10,18 +11,21 @@ export const router = createBrowserRouter([
     element: <SetupPage />,
   },
   {
+    path: "/game-over",
+    element: <GameOverPage />
+  },
+  {
     path: "/",
     element: <RootLayout />,
-    // Tout ce qui est dans "children" apparaîtra à la place du <Outlet />
     children: [
       {
-        index: true, // Route par défaut (Studio)
+        index: true,
         element: <StudioPage />,
       },
       {
         path: "shop",
         element: <ShopPage />,
-      },
+      }
     ],
   },
 ]);
