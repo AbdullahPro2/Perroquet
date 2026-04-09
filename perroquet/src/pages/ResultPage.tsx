@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../stores/appStore";
 
@@ -5,11 +6,15 @@ export const ResultPage = () => {
   const navigate = useNavigate();
   const lastPostResult = useAppStore((state) => state.lastPostResult);
 
-  // Sécurité si on arrive sur la page sans avoir publié
-  if (!lastPostResult) {
-    navigate("/");
-    return null;
-  }
+  // Sécuriser la redirection dans un useEffect (Bonne pratique React)
+  useEffect(() => {
+    if (!lastPostResult) {
+      navigate("/", { replace: true });
+    }
+  }, [lastPostResult, navigate]);
+
+  // Si pas de données, on ne rend rien le temps d'être redirigé
+  if (!lastPostResult) return null;
 
   const { audienceGain, capitalGain, healthLoss, feedback } = lastPostResult;
 
@@ -24,11 +29,13 @@ export const ResultPage = () => {
           <p className="text-lg font-bold text-amber-400">{feedback}</p>
         </div>
 
-        {/* Les stats modifiées */}
+        {/* Les stats */}
         <div className="space-y-4 text-left mt-2">
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
             <span className="text-slate-400 font-bold uppercase text-xs tracking-wider">Abonnés gagnés</span>
-            <span className="text-xl font-black text-blue-500">+{audienceGain}</span>
+            <span className={`text-xl font-black ${audienceGain >= 0 ? "text-blue-500" : "text-rose-500"}`}>
+              {audienceGain >= 0 ? `+${audienceGain}` : audienceGain}
+            </span>
           </div>
           
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
@@ -39,7 +46,8 @@ export const ResultPage = () => {
           <div className="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
             <span className="text-slate-400 font-bold uppercase text-xs tracking-wider">Santé Mentale</span>
             <span className={`text-xl font-black ${healthLoss > 0 ? "text-rose-500" : "text-emerald-500"}`}>
-              {healthLoss > 0 ? `-${healthLoss}%` : "+5% (Reposant)"}
+              {/* Correction de l'affichage dynamique */}
+              {healthLoss > 0 ? `-${healthLoss}%` : `+${-healthLoss}% (Reposant)`}
             </span>
           </div>
         </div>

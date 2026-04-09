@@ -232,10 +232,10 @@ export const useAppStore = create<GameState>()(
               });
 
               draft.lastPostResult = {
-                audienceGain,
-                capitalGain,
-                healthLoss,
-                feedback,
+                audienceGain: audienceChange,
+                capitalGain : capitalGain,
+                healthLoss: -healthChange,
+                feedback : feedback,
               };
 
               if (Math.random() > 0.7) {
