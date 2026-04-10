@@ -11,6 +11,8 @@
 ## Perroquet
 
 > **Un jeu Tycoon**
+
+
 > Perroquet est un jeu de type Tycoon qui place le joueur dans la peau d'un streameur politique débutant devant choisir son camp et sa plateforme, et qui s'appuie sur une analyse approfondie des données de chaque contenu pour lui permettre de décrypter la mécanique cachée des algorithmes et de comprendre l'impact direct de ses choix éditoriaux.
 
 ### Captures d'écran
