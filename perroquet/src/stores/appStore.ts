@@ -163,7 +163,7 @@ export const useAppStore = create<GameState>()(
 
             const isTrending = themeChoice === state.currentTrend;
 
-            // A. DISTANCE IDÉOLOGIQUE (Hypocrisie)
+            // DISTANCE IDÉOLOGIQUE (Hypocrisie)
             const initialValue = state.initialCamp
               ? CAMP_VALUES[state.initialCamp]
               : 0;
@@ -175,13 +175,13 @@ export const useAppStore = create<GameState>()(
             let engagementScore = 0;
             let healthChange = 0;
 
-            // 1. Format
+            // Format
             engagementScore +=
               format === "court"
                 ? currentPlatformConfig.bias.formatCourt
                 : currentPlatformConfig.bias.formatLong;
 
-            // 2. Ton
+            // Ton
             if (tone === "radical") {
               engagementScore += currentPlatformConfig.bias.tonRadical;
               healthChange -= 8; // Le clash épuise toujours mentalement
@@ -190,18 +190,18 @@ export const useAppStore = create<GameState>()(
               healthChange += 10; // La nuance repose mentalement
             }
 
-            // 3. Tendance
+            // Tendance
             if (isTrending) {
               engagementScore += currentPlatformConfig.bias.tendanceBoost;
             }
 
-            // 4. Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
+            // Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
             if (camp === "extreme_gauche" || camp === "extreme_droite") {
               engagementScore += 2;
               healthChange -= 10;
             }
 
-            // C. CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
+            // CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
             let audienceChange = 0;
             let capitalGain = Math.floor(
               10 + state.audience * 0.02 * Math.max(1, engagementScore),
@@ -221,7 +221,7 @@ export const useAppStore = create<GameState>()(
               capitalGain = 5;
             }
 
-            // D. LE BACKLASH ET LA CATHARSIS (Le cœur du dilemme)
+            // LE BACKLASH ET LA CATHARSIS (Le cœur du dilemme)
             if (dissonanceDistance === 0 && tone === "nuance") {
               // CATHARSIS ABSOLUE : Le joueur est honnête avec lui-même et s'exprime calmement
               healthChange += 20;
@@ -241,7 +241,7 @@ export const useAppStore = create<GameState>()(
 
             audienceChange = Math.max(-state.audience, audienceChange);
 
-            // E. CHOIX DU FEEDBACK (Adapté pour signaler le soin)
+            // CHOIX DU FEEDBACK (Adapté pour signaler le soin)
             if (dissonanceDistance >= 2) {
               feedback =
                 "💥 BACKLASH : Votre base historique crie à la trahison ! Désabonnements massifs.";

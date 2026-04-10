@@ -23,11 +23,11 @@ export const SetupPage = () => {
   ];
 
   return (
-    // MODIFIÉ : min-h-[100dvh] permet de scroller si l'écran du téléphone est très petit
+    //  min-h-[100dvh] permet de scroller si l'écran du téléphone est très petit
     <div className="min-h-[100dvh] w-full bg-slate-900 flex items-center justify-center p-4 py-8 md:py-4">
-      {/* MODIFIÉ : Padding interne réduit sur mobile (p-5 au lieu de p-8) */}
+      {/* Padding interne réduit sur mobile (p-5 au lieu de p-8) */}
       <div className="bg-white rounded-2xl shadow-2xl p-5 md:p-8 max-w-2xl w-full">
-        {/* MODIFIÉ : Typographie légèrement ajustée pour les petits écrans */}
+        {/* Typographie légèrement ajustée pour les petits écrans */}
         <h1 className="text-2xl md:text-3xl font-black text-slate-800 text-center mb-2">
           Perroquet
         </h1>
@@ -46,7 +46,7 @@ export const SetupPage = () => {
                 <button
                   key={c.id}
                   onClick={() => setCamp(c.id)}
-                  // MODIFIÉ : py-3.5 sur mobile pour des boutons plus hauts (plus faciles à toucher)
+                  // py-3.5 sur mobile pour des boutons plus hauts (plus faciles à toucher)
                   className={`px-3 py-3.5 md:py-3 rounded-xl border-2 font-bold text-sm md:text-base transition-all ${
                     camp === c.id
                       ? "border-indigo-600 bg-indigo-50 text-indigo-700"
@@ -69,7 +69,7 @@ export const SetupPage = () => {
                 <button
                   key={p.id}
                   onClick={() => setPlatform(p.id)}
-                  // MODIFIÉ : espacements internes revus pour mobile
+                  // espacements internes revus pour mobile
                   className={`p-4 md:p-5 rounded-xl border-2 text-left transition-all ${
                     platform === p.id
                       ? "border-indigo-600 bg-indigo-50"
@@ -93,7 +93,7 @@ export const SetupPage = () => {
           <button
             disabled={!camp || !platform}
             onClick={handleStart}
-            // MODIFIÉ : shadow optimisé
+            // shadow optimisé
             className="w-full mt-2 md:mt-4 bg-indigo-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-black py-4 rounded-xl shadow-lg hover:bg-indigo-700 transition-all active:scale-95"
           >
             LANCER MON COMPTE

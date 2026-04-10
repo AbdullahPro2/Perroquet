@@ -4,7 +4,6 @@ export const Topbar = () => {
   const { audience, capital, mentalHealth } = useAppStore();
 
   return (
-    // Mobile-first: flex-col, background dark, p-4. Desktop: flex-row, transparent, h-20.
     <header className="flex flex-col p-4 gap-3 bg-slate-900 border-b border-slate-800 shrink-0 z-10 md:flex-row md:h-20 md:items-center md:justify-end md:gap-8 md:px-8 md:py-0 md:bg-transparent md:border-slate-800/50">
       {/* Top Block: Audience and Capital */}
       <div className="flex justify-between items-center w-full md:w-auto md:justify-end md:gap-8">

@@ -3,7 +3,7 @@ import { NavLink, Link } from "react-router-dom";
 export const Sidebar = () => {
   return (
     <nav className="fixed bottom-0 left-0 w-full z-50 bg-slate-900 border-t border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] md:relative md:w-64 md:border-t-0 md:border-r md:shadow-none md:flex md:flex-col md:shrink-0 pb-[env(safe-area-inset-bottom)] md:pb-0">
-      {/* Logo - Hidden on Mobile, Visible on Desktop */}
+      {/* Logo - Cache sur Mobile, Visible sur PC */}
       <Link
         to="/"
         className="hidden md:flex h-20 items-center px-6 border-b border-slate-800 mb-6 hover:bg-slate-800/50 transition-colors"

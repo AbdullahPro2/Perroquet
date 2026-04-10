@@ -30,9 +30,9 @@ export const ResultPage = () => {
   };
 
   return (
-    // MODIFIÉ : overflow-y-auto permet le scroll, justify-start empêche le contenu d'être poussé hors de l'écran en haut
+    // overflow-y-auto permet le scroll, justify-start empêche le contenu d'être poussé hors de l'écran en haut
     <div className="h-full overflow-y-auto flex flex-col items-center justify-start md:justify-center p-4">
-      {/* MODIFIÉ : my-auto centre la carte s'il y a de la place, sinon elle scrolle. Paddings réduits sur mobile (p-5 au lieu de p-8). */}
+      {/* my-auto centre la carte s'il y a de la place, sinon elle scrolle. Paddings réduits sur mobile (p-5 au lieu de p-8). */}
       <div className="bg-slate-800 border border-slate-700 p-5 md:p-8 rounded-2xl shadow-2xl max-w-lg w-full text-center flex flex-col gap-4 md:gap-6 glass-panel my-auto shrink-0">
         <h2 className="text-2xl md:text-3xl font-black text-white mb-1 md:mb-2">
           Bilan du Contenu
@@ -81,7 +81,7 @@ export const ResultPage = () => {
 
         <button
           onClick={handleContinue}
-          // MODIFIÉ : py-4 sur mobile pour un bouton confortable
+          // py-4 sur mobile pour un bouton confortable
           className="mt-2 md:mt-4 w-full bg-indigo-600 text-white font-black text-base md:text-lg py-4 rounded-xl shadow-lg hover:bg-indigo-500 transition-all active:scale-95"
         >
           {postCount >= 10 ? "VOIR LE RÉSULTAT FINAL" : "SEMAINE SUIVANTE"}

@@ -5,13 +5,11 @@ export const ShopPage = () => {
   const buyTool = useAppStore((state) => state.actions.buyTool);
 
   return (
-    // MODIFIÉ : Padding réduit sur mobile (p-4), large sur desktop (md:p-8)
     <div className="bg-slate-800 rounded-2xl shadow-sm border border-slate-700 p-4 md:p-8 text-white">
       <h2 className="text-xl md:text-2xl font-black mb-4 md:mb-6">
         Marché de la Donnée
       </h2>
 
-      {/* MODIFIÉ : Gap réduit sur mobile pour gagner de la place */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* OUTIL 1 : Analyseur de Tendances */}
         <div className="border-2 border-slate-600 rounded-xl p-4 md:p-6 relative bg-slate-900 flex flex-col">
@@ -100,7 +98,6 @@ export const ShopPage = () => {
                 <button
                   onClick={() => buyTool("politicalDoc", 500)}
                   disabled={capital < 500}
-                  // MODIFIÉ : py-3 sur mobile pour le confort tactile
                   className="bg-indigo-600 text-white px-4 py-3 md:py-2 rounded-lg font-bold text-sm md:text-base hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Acheter

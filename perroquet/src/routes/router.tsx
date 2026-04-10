@@ -11,7 +11,7 @@ import { VictoryPage } from "../pages/VictoryPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/intro", // <--- Nouvelle route
+    path: "/intro",
     element: <IntroPage />,
   },
   {

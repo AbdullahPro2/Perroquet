@@ -40,7 +40,6 @@ export const StudioPage = () => {
   ];
 
   return (
-    // FIX 1: "h-full" changed to "xl:h-full". On mobile, the container expands infinitely downwards.
     <div className="flex flex-col xl:grid xl:grid-cols-12 gap-6 xl:h-full">
       <div className="xl:col-span-6 bg-slate-800 rounded-2xl shadow-xl border border-slate-700 flex flex-col xl:overflow-hidden">
         {/* EN-TÊTE */}
@@ -76,7 +75,6 @@ export const StudioPage = () => {
           )}
         </div>
 
-        {/* CONTENU - FIX 3: Removed "flex-1 overflow-y-auto" on mobile so it never squishes to 0 height */}
         <div className="p-4 md:p-6 flex flex-col gap-6 xl:flex-1 xl:overflow-y-auto">
           {/* SECTION DES CAMPS POLITIQUES */}
           <div>
