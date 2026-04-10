@@ -15,11 +15,9 @@
 
 ### Captures d'écran
 
-### Captures d'écran
-
 ![Capture 1](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/1.png)
 ![Capture 2](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/2.png)
-![Capture 3](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/raw/master/Screenshots/3.png)
+![Capture 3](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/3.png)
 ![Capture 4](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/4.png)
 ![Capture 5](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/5.png)
 ![Capture 6](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/6.png)
