@@ -37,8 +37,9 @@ Les étapes du projet tuteuré T2 sont les suivantes :
 
 - Ajouter un graphique de l'évolution de la trésorerie.
 
+- Amélioration de l'interface. L'interface est très belle et moderne mais la sidebar est grande et ne comporte que 2 éléments "créations" et "data center". De plus en jouant une première fois au jeu je n'ai pas pu voir deux options qui sont "contenu long/court" et "contenu nuancé/radical" car la résolution de mon pc était plus petite que la moyenne. Donc il faudrait éventuellement agrandir le widget création un peu plus ou encore rendre la scrollbar plus visible.
 
-- Amélioration de l'interface. L'interface est très belle et moderne mais la sidebar est grande et ne comporte que 2 éléments "créations" et "data center". De plus en jouant une première fois au jeu je n'ai pas pu voir deux options qui sont "contenu long/court" et "contenu nuancé/radical" car la résolution de mon pc était plus petite que la moyenne. Donc il faudrait éventuellement agrandir le widget création un peu plus ou encore rendre le scrollbar plus visible.
+-Changer le curseur bar défaut sur tous les boutons car certains boutons ne changent pas le curseurs par défaut et cela donne l'impression que le bouton n'est pas clickable
 
 ## Grille d'évaluation T2 (à remplir par les membres du groupe T4)
 
@@ -212,7 +213,7 @@ Pour un exemple de ce qui est attenu, voir https://gitlab.unistra.fr/T234/t4-exe
 
 Justifications :
 
-Dans l'ensemble, le cahier des charges est très bien rédigé, surtout pout les parties pédagogiques qui expliquent clairement les enjeux du projet et le fonctionnement global. L'exemple est parfaitement respecté. Toutefois comme évoqués précédemment les captures d'écrans de l'interface pourraient être mis dans la partie interface de même que les captures des scénarios pour une meilleure appréhension de l'interface globale. 
+Dans l'ensemble, le cahier des charges est très bien rédigé, surtout pout les parties pédagogiques qui expliquent clairement les enjeux du projet et le fonctionnement global. L'exemple est parfaitement respecté selon moi. Toutefois comme évoqué précédemment les captures d'écrans de l'interface pourraient être mis dans la partie interface de même que les captures des scénarios pour une meilleure appréhension de l'interface globale. 
 
 ## Résultat T4
 - Total d'item « Excellent » (2 point) : 
