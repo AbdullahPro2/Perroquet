@@ -33,7 +33,7 @@ export const ShopPage = () => {
             <button
               onClick={() => buyTool("trendAnalyzer", 200)}
               disabled={capital < 200 || hasTrendAnalyzer}
-              // MODIFIÉ : py-3 sur mobile pour un bouton plus facile à cliquer au pouce
+              // py-3 sur mobile pour un bouton plus facile à cliquer au pouce
               className="bg-indigo-600 text-white px-4 py-3 md:py-2 rounded-lg font-bold text-sm md:text-base hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Acheter

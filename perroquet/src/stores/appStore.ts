@@ -16,7 +16,6 @@ export const PLATFORMS_CONFIG: Record<PlatformId, PlatformConfig> = {
     name: "X-Sphere",
     description:
       "Micro-blogging. L'algorithme adore l'indignation et le format court.",
-    // Biais : Pousse au clash et au format court. Déteste la nuance.
     bias: {
       formatCourt: 4,
       formatLong: -3,
@@ -30,7 +29,6 @@ export const PLATFORMS_CONFIG: Record<PlatformId, PlatformConfig> = {
     name: "VidTube",
     description:
       "Plateforme vidéo. Valorise la rétention, le format long et l'expertise.",
-    // Biais : Récompense l'effort (format long) et accepte mieux la nuance. Le clash marche un peu moins bien.
     bias: {
       formatCourt: -2,
       formatLong: 5,
@@ -73,7 +71,6 @@ interface GameState {
   }>;
 
   actions: {
-    // MODIFIÉ : Accepte le camp initial lors du setup
     markIntroSeen: () => void;
     setupIdentity: (platform: PlatformId, initialCamp: Camp) => void;
     buyTool: (tool: "trendAnalyzer" | "politicalDoc", cost: number) => void;
@@ -89,8 +86,6 @@ interface GameState {
 
 const ALL_THEMES: Theme[] = ["immigration", "ecologie", "guerre", "science"];
 
-// 2. LA MATRICE DE DISTANCE (Le dictionnaire manquant)
-// Traduit l'espace politique en valeurs mathématiques pour calculer la dissonance
 const CAMP_VALUES: Record<Camp, number> = {
   extreme_gauche: -2,
   gauche: -1,
@@ -99,7 +94,6 @@ const CAMP_VALUES: Record<Camp, number> = {
   extreme_droite: 2,
 };
 
-// 3. L'IMPLÉMENTATION DU STORE
 export const useAppStore = create<GameState>()(
   devtools(
     persist(
@@ -120,7 +114,6 @@ export const useAppStore = create<GameState>()(
 
         postCount: 0,
         postHistory: [
-          // On initialise avec "centre", ce sera écrasé par le setup
           {
             id: "0",
             postCount: 0,
@@ -163,7 +156,6 @@ export const useAppStore = create<GameState>()(
 
             const isTrending = themeChoice === state.currentTrend;
 
-            // DISTANCE IDÉOLOGIQUE (Hypocrisie)
             const initialValue = state.initialCamp
               ? CAMP_VALUES[state.initialCamp]
               : 0;
@@ -175,47 +167,33 @@ export const useAppStore = create<GameState>()(
             let engagementScore = 0;
             let healthChange = 0;
 
-            // 1. Format
             if (format === "court") {
               engagementScore += currentPlatformConfig.bias.formatCourt;
-              healthChange -= 8; // Le format court (snack-content) fatigue
+              healthChange -= 8;
             } else {
               engagementScore += currentPlatformConfig.bias.formatLong;
-              healthChange += 19; // Prendre le temps de faire du contenu long est valorisant
+              healthChange += 19;
             }
 
-            // Ton
             if (tone === "radical") {
               engagementScore += currentPlatformConfig.bias.tonRadical;
-              healthChange -= 8; // Le clash épuise toujours mentalement
+              healthChange -= 8;
             } else {
               engagementScore += currentPlatformConfig.bias.tonNuance;
-              healthChange += 19; // La nuance repose mentalement
+              healthChange += 19;
             }
-
-
-            // --- MÉCANIQUE DE SOIN RAPIDE ---
-            // Si on fait "long" (plus interressant) et "nuancé" (pas de clash),
-            // on se repose énormément. On ajoute +25 pour un total de +30.
-            //if (format === "long" && tone === "nuance") {
-            //  healthChange += 25;
-            //}
-
-            // Tendance
 
             if (isTrending) {
               engagementScore += currentPlatformConfig.bias.tendanceBoost;
             }
 
-            // Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
             if (camp === "extreme_gauche" || camp === "extreme_droite") {
               engagementScore += 2;
               healthChange -= 10;
             }
 
-            // CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
             let audienceChange = 0;
-            
+
             let capitalGain = Math.floor(
               25 + state.audience * 0.02 * Math.max(1, engagementScore),
             );
@@ -224,36 +202,28 @@ export const useAppStore = create<GameState>()(
               audienceChange = Math.floor(
                 20 + state.audience * 0.05 * engagementScore,
               );
-              // Un petit boost de dopamine si on a du succès SANS trop se trahir
               if (dissonanceDistance === 0) healthChange += 5;
             } else if (engagementScore > 0) {
               audienceChange = Math.floor(10 + state.audience * 0.01);
             } else {
-              // Flop algorithmique
               audienceChange = -Math.floor(15 + state.audience * 0.03);
-              // Même un flop rapporte un petit peu d'argent
-              capitalGain = 12; 
+              capitalGain = 12;
             }
 
-            // D. LE BACKLASH, LA CATHARSIS ET L'OPPORTUNISME VIRAL
-            const isExtremePost = camp === "extreme_gauche" || camp === "extreme_droite";
+            const isExtremePost =
+              camp === "extreme_gauche" || camp === "extreme_droite";
 
             if (dissonanceDistance === 1) {
               healthChange -= 5;
             } else if (dissonanceDistance === 2 && isExtremePost) {
-              // LE CENTRISTE QUI VEND SON ÂME AUX EXTRÊMES
-              // L'algorithme adore ça : gros bonus de vues et d'argent !
-              audienceChange += Math.floor(state.audience * 0.25) + 80; 
-              capitalGain = Math.floor(capitalGain * 1.5); 
-              // Mais ça lui coûte mentalement un peu plus cher qu'un vrai extrémiste (-12)
-              healthChange -= 12; 
+              audienceChange += Math.floor(state.audience * 0.25) + 80;
+              capitalGain = Math.floor(capitalGain * 1.5);
+              healthChange -= 12;
             } else if (dissonanceDistance === 2) {
-              // Controverse classique (ex: Gauche qui publie à Droite)
               healthChange -= 10;
-              audienceChange -= Math.floor(state.audience * 0.10);
+              audienceChange -= Math.floor(state.audience * 0.1);
               capitalGain = Math.floor(capitalGain * 0.5);
             } else if (dissonanceDistance >= 3) {
-              // TRAHISON TOTALE : Grand écart politique
               healthChange -= 30;
               audienceChange = -Math.floor(state.audience * 0.35) - 100;
               capitalGain = Math.floor(capitalGain * 0.1);
@@ -266,30 +236,35 @@ export const useAppStore = create<GameState>()(
 
             audienceChange = Math.max(-state.audience, audienceChange);
 
-            // E. CHOIX DU FEEDBACK
             if (dissonanceDistance >= 3) {
-              feedback = "💥 BACKLASH : Grand écart politique ! Désabonnements massifs.";
+              feedback =
+                "💥 BACKLASH : Grand écart politique ! Désabonnements massifs.";
             } else if (dissonanceDistance === 2 && isExtremePost) {
-              feedback = "🎭 OPPORTUNISME VIRAL : Jouer les extrêmes fait exploser vos vues, mais vous perdez votre âme.";
+              feedback =
+                "🎭 OPPORTUNISME VIRAL : Jouer les extrêmes fait exploser vos vues, mais vous perdez votre âme.";
             } else if (dissonanceDistance === 2) {
-              feedback = "⚠️ CONTROVERSE : Votre base historique est confuse face à ce positionnement.";
+              feedback =
+                "⚠️ CONTROVERSE : Votre base historique est confuse face à ce positionnement.";
             } else if (
               dissonanceDistance === 0 &&
               tone === "nuance" &&
               engagementScore < 0
             ) {
-              feedback = "🧘 CATHARSIS : L'algo vous ignore, mais exprimer sereinement vos vraies convictions vous a fait un bien fou.";
+              feedback =
+                "🧘 CATHARSIS : L'algo vous ignore, mais exprimer sereinement vos vraies convictions vous a fait un bien fou.";
             } else if (engagementScore < 0) {
-              feedback = "📉 FLOP : Trop nuancé ou trop long. L'algorithme X-Sphere a enterré votre post.";
+              feedback =
+                "📉 FLOP : Trop nuancé ou trop long. L'algorithme X-Sphere a enterré votre post.";
             } else if (isTrending && tone === "radical") {
-              feedback = "🔥 VIRALITÉ MAX : Votre indignation sur la tendance a explosé l'algorithme !";
+              feedback =
+                "🔥 VIRALITÉ MAX : Votre indignation sur la tendance a explosé l'algorithme !";
             } else if (tone === "radical" || camp.includes("extreme")) {
-              feedback = "📈 CLASH RENTABLE : Les vues montent, mais la toxicité des commentaires vous pèse.";
+              feedback =
+                "📈 CLASH RENTABLE : Les vues montent, mais la toxicité des commentaires vous pèse.";
             } else {
               feedback = "📊 Votre audience réagit normalement.";
             }
-            
-            // F. MISE À JOUR DE L'ÉTAT
+
             set((draft) => {
               draft.audience = Math.max(0, draft.audience + audienceChange);
               draft.capital += capitalGain;
@@ -309,9 +284,9 @@ export const useAppStore = create<GameState>()(
 
               draft.lastPostResult = {
                 audienceGain: audienceChange,
-                capitalGain : capitalGain,
-                healthLoss: -healthChange, // On inverse le signe pour l'affichage (healthChange positif = gain de santé = healthLoss négatif)
-                feedback : feedback,
+                capitalGain: capitalGain,
+                healthLoss: -healthChange,
+                feedback: feedback,
               };
 
               if (Math.random() > 0.7) {
@@ -326,12 +301,18 @@ export const useAppStore = create<GameState>()(
             return { feedback };
           },
 
+          // MODIFIÉ : Réinitialisation totale et absolue de l'état (RAM)
           resetGame: () =>
             set((draft) => {
+              // On conserve hasSeenIntro pour que le joueur ne revoie pas l'intro
+              draft.platform = null;
               draft.initialCamp = null;
               draft.audience = 100;
               draft.capital = 50;
               draft.mentalHealth = 100;
+              draft.hasTrendAnalyzer = false;
+              draft.hasPoliticalDoc = false;
+              draft.lastPostResult = null;
               draft.postCount = 0;
               draft.postHistory = [
                 {
@@ -342,13 +323,18 @@ export const useAppStore = create<GameState>()(
                   camp: "centre",
                 },
               ];
-              draft.platform = null;
-              draft.hasTrendAnalyzer = false;
-              draft.hasPoliticalDoc = false;
+              draft.currentTrend =
+                ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)];
             }),
         },
       })),
-      { name: "perroquet-game-v4" },
+      {
+        name: "perroquet-game-v4",
+        partialize: (state) =>
+          Object.fromEntries(
+            Object.entries(state).filter(([key]) => key !== "actions"),
+          ),
+      },
     ),
   ),
 );

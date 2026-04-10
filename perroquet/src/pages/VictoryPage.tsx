@@ -1,23 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../stores/appStore";
 
 export const VictoryPage = () => {
   const { audience, capital, mentalHealth } = useAppStore();
+  const resetGame = useAppStore((state) => state.actions.resetGame);
+  const navigate = useNavigate();
 
   const handleRestart = () => {
-    localStorage.removeItem("perroquet-game-v4"); 
-    sessionStorage.removeItem("perroquet-game-v4");
-    window.location.replace("/setup");
+    resetGame();
+    navigate("/setup");
   };
 
   return (
     <div className="min-h-screen w-full overflow-hidden bg-slate-950 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-emerald-500/50 rounded-2xl shadow-2xl shadow-emerald-900/20 p-8 max-w-lg w-full text-center">
-        
         <h1 className="text-5xl font-black text-emerald-500 mb-2 uppercase tracking-widest">
           Succès Viral !
         </h1>
         <p className="text-emerald-100 mb-8">
-          Incroyable ! Vous avez dominé l'algorithme et dépassé les 5 000 abonnés en moins de 10 semaines.
+          Incroyable ! Vous avez dominé l'algorithme et dépassé les 5 000
+          abonnés en moins de 10 semaines.
         </p>
 
         <div className="bg-slate-800 rounded-lg p-6 mb-8 text-left space-y-4">
@@ -26,7 +28,9 @@ export const VictoryPage = () => {
           </h2>
           <div className="flex justify-between">
             <span className="text-slate-400">Audience finale :</span>
-            <span className="font-bold text-indigo-400">{audience.toLocaleString()} abonnés</span>
+            <span className="font-bold text-indigo-400">
+              {audience.toLocaleString()} abonnés
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-400">Santé mentale restante :</span>
@@ -34,7 +38,9 @@ export const VictoryPage = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-slate-400">Capital amassé :</span>
-            <span className="font-bold text-emerald-400">{capital.toLocaleString()} €</span>
+            <span className="font-bold text-emerald-400">
+              {capital.toLocaleString()} €
+            </span>
           </div>
         </div>
 

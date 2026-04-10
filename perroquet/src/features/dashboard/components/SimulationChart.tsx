@@ -22,7 +22,7 @@ interface SimulationChartProps {
 export const SimulationChart = ({ data }: SimulationChartProps) => {
   if (!data || data.length === 0) return null;
 
-  // 1. Dégeler la donnée (Immer) et sécuriser l'axe X pour Recharts
+  // Dégeler la donnée (Immer) et sécuriser l'axe X pour Recharts
   // On convertit le postCount en String ("0", "1") car Recharts bug souvent sur le chiffre 0 pur.
   const safeData = data.map((item) => ({
     ...item,
@@ -43,11 +43,15 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
       {!isGameStarted ? (
         <div className="w-full h-[250px] flex flex-col items-center justify-center text-slate-500 animate-pulse">
           <span className="text-4xl mb-3">📊</span>
-          <p className="text-sm font-bold text-slate-400">En attente de données</p>
-          <p className="text-xs text-center mt-1">Publiez votre premier contenu pour générer le graphique.</p>
+          <p className="text-sm font-bold text-slate-400">
+            En attente de données
+          </p>
+          <p className="text-xs text-center mt-1">
+            Publiez votre premier contenu pour générer le graphique.
+          </p>
         </div>
       ) : (
-        // 2. Conteneur strict : width 99% est LE hack officiel pour éviter que Flexbox n'écrase Recharts
+        // Conteneur strict : width 99% est LE hack officiel pour éviter que Flexbox n'écrase Recharts
         <div style={{ width: "99%", height: "250px", position: "relative" }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
@@ -56,21 +60,33 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
             >
               <defs>
                 <linearGradient id="colorAudience" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={COLOR_AUDIENCE} stopOpacity={0.3} />
-                  <stop offset="95%" stopColor={COLOR_AUDIENCE} stopOpacity={0} />
+                  <stop
+                    offset="5%"
+                    stopColor={COLOR_AUDIENCE}
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={COLOR_AUDIENCE}
+                    stopOpacity={0}
+                  />
                 </linearGradient>
                 <linearGradient id="colorHealth" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={COLOR_HEALTH} stopOpacity={0.3} />
+                  <stop
+                    offset="5%"
+                    stopColor={COLOR_HEALTH}
+                    stopOpacity={0.3}
+                  />
                   <stop offset="95%" stopColor={COLOR_HEALTH} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              
+
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke="rgba(255,255,255,0.05)"
                 vertical={false}
               />
-              
+
               <XAxis
                 dataKey="safePostCount"
                 stroke="#64748b"
@@ -79,7 +95,7 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
                 axisLine={false}
                 tickFormatter={(value) => `Semaine ${value}`}
               />
-              
+
               <YAxis
                 yAxisId="left"
                 stroke={COLOR_AUDIENCE}
@@ -87,7 +103,9 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
                 tickLine={false}
                 axisLine={false}
                 // Sécurité stricte du retour en chaîne de caractères
-                tickFormatter={(value) => (value >= 1000 ? `${(value / 1000).toFixed(1)}k` : `${value}`)}
+                tickFormatter={(value) =>
+                  value >= 1000 ? `${(value / 1000).toFixed(1)}k` : `${value}`
+                }
               />
 
               <YAxis
