@@ -100,7 +100,7 @@ Les étapes du projet tuteuré T2 sont les suivantes :
   - [ ] Julien Gossa est owner du dépôt GIT.
   - [ ] Julien Gossa n'est pas owner du dépôt GIT.
 
-Justifications : bonne organisation des fichiers meme si d'un point de vue totalement extérieur l'usage de chaque fichier n'est pas clair. Cependant chaque fichier est nommé indépendemment, les fichiers sont nommés en PascalCase. Les commits sont détaillés et clairs dans leurs titres pour la plupart (3 commits sont peu clairs). Aucun souci sur les droits d'accès au git et au fichier.md
+Justifications : bonne organisation des fichiers meme si d'un point de vue totalement extérieur l'usage de chaque fichier n'est pas clair. Cependant chaque fichier est nommé indépendemment, les fichiers sont nommés en PascalCase. Les commits sont détaillés et clairs dans leurs titres pour la plupart (3 commits sur environ une soixantaine sont peu clairs). Aucun souci sur les droits d'accès au git et au fichier.md
 
 ## Prototype
 - Installation
@@ -144,7 +144,7 @@ Je connaissais déjà le fonctionnement des algorithmes utilisés par les platef
   - [x] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 
-Justifications :
+Justifications : la présentation est en une seule phrase assez explicative et complète, mais celle-ci me parait lourde et longue.
 
 ## Cahier des charges 
 
@@ -187,7 +187,7 @@ Pour un exemple de ce qui est attenu, voir https://gitlab.unistra.fr/T234/t4-exe
   - [ ] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 
-Justifications :
+Justifications : cahier des charges complets et assez clair. Quelques erreurs de typo et coquilles mais rien qui gène la compréhension du projet.
 
 ## Résultat T4
 - Total d'item « Excellent » (2 point) : 14
