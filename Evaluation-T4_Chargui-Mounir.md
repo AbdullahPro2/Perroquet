@@ -125,7 +125,7 @@ Les étapes du projet tuteuré T2 sont les suivantes :
 Résumer en une phrase ce que vous avez éventuellement appris en jouant :
 
 Autres justifications :
-J’ai testé le jeu en lançant plusieurs parties, en essayant différents choix (Gauche, radical, cours) afin d’observer leur impact sur les statistiques, ce qui m’a permis de vérifier la stabilité du prototype, l’absence d’instructions intégrées et le bon fonctionnement global de l’exécution.
+J’ai testé le jeu en lançant plusieurs parties, en essayant différents choix (Gauche, radical, cours) afin d’observer leur impact sur les statistiques, ce qui m’a permis de vérifier la stabilité du prototype, l’absence d’instructions intégrées / exemple : notification a chaque etape du jeu pour aider l'utilisateur perdue  et le bon fonctionnement global de l’exécution.
 
 ## Présentation README.md
 
