@@ -65,27 +65,48 @@ export const SetupPage = () => {
               2. La Plateforme Cible
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-              {Object.values(PLATFORMS_CONFIG).map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setPlatform(p.id)}
-                  // espacements internes revus pour mobile
-                  className={`p-4 md:p-5 rounded-xl border-2 text-left transition-all ${
-                    platform === p.id
-                      ? "border-indigo-600 bg-indigo-50"
-                      : "border-slate-200 hover:border-slate-300 bg-white"
-                  }`}
-                >
-                  <h3
-                    className={`font-black text-base md:text-lg ${platform === p.id ? "text-indigo-700" : "text-slate-800"}`}
+              {Object.values(PLATFORMS_CONFIG).map((p) => {
+                // On vérifie si la plateforme est VidTube
+                const isDisabled = p.id === "vidtube";
+
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => setPlatform(p.id)}
+                    disabled={isDisabled} // Empêche le clic
+                    // espacements internes revus pour mobile et ajout du style "désactivé"
+                    className={`p-4 md:p-5 rounded-xl border-2 text-left transition-all relative ${
+                      isDisabled
+                        ? "border-slate-300 bg-slate-100 cursor-not-allowed opacity-60"
+                        : platform === p.id
+                        ? "border-indigo-600 bg-indigo-50"
+                        : "border-slate-200 hover:border-slate-300 bg-white"
+                    }`}
                   >
-                    {p.name}
-                  </h3>
-                  <p className="text-[11px] md:text-xs text-slate-500 mt-1 leading-snug">
-                    {p.description}
-                  </p>
-                </button>
-              ))}
+                    <h3
+                      className={`font-black text-base md:text-lg ${
+                        isDisabled
+                          ? "text-slate-500"
+                          : platform === p.id
+                          ? "text-indigo-700"
+                          : "text-slate-800"
+                      }`}
+                    >
+                      {p.name}
+                    </h3>
+                    <p className="text-[11px] md:text-xs text-slate-500 mt-1 leading-snug">
+                      {p.description}
+                    </p>
+                    
+                    {/* Petit badge explicatif (optionnel, mais bien pour l'UI) */}
+                    {isDisabled && (
+                      <div className="mt-3 inline-block bg-slate-200 text-slate-500 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                        🔒 Bientôt disponible
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
