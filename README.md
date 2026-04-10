@@ -23,6 +23,8 @@
 ![Capture 4](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/4.png)
 ![Capture 5](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/5.png)
 ![Capture 6](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/6.png)
+![Capture 7](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/7.png)
+![Capture 8](https://git.unistra.fr/arcalis/vin-26-t-4-b/-/raw/master/Screenshots/8.png)
 ### Procédures d'installation et d'exécution
 
 Pour jouer, cliquez sur le lien ci-dessous :
