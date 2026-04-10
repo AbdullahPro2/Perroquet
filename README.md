@@ -58,6 +58,7 @@ Les objectifs pédagogiques de Perroquet sont de permettre au joueur de comprend
 * **Dilemme moral :** Trahir ses convictions politiques initiales pour s'adapter à l'algorithme fait baisser proportionnellement la jauge de Santé Mentale/Intégrité.
 * **Suivi des statistiques :** Un tableau de bord permet de surveiller l'équilibre fragile entre la croissance financière et l'intégrité personnelle.
 
+
 ---
 
 ## Simulation : Chaque post correspond à une semaine qui passe
@@ -94,6 +95,7 @@ L'interface se présente sous la forme d'un "Dashboard" (tableau de bord) immers
 
 * **Scénario d'introduction et la découverte de la méta :** En début de partie, le joueur a la possibilité de mener une phase de test en publiant différents types de contenus (neutres ou légèrement orientés) sur plusieurs réseaux sociaux distincts. L'objectif de ce scénario est de forcer le joueur à analyser les données de ses premiers échecs et succès pour comprendre par lui-même quels critères sont favorisés par l'algorithme de chaque plateforme.
 * **Scénario de crise (Le changement de camp politique) :** Si, au cours de la partie, le joueur décide de modifier radicalement sa ligne éditoriale et de changer de camp politique tout en conservant son canal principal (même compte, mêmes thématiques générales), il déclenche un événement de crise. L'audience réagit violemment à cette dissonance : le joueur subit une perte drastique d'abonnés de sa base initiale, une chute de ses vues, et un impact critique sur sa jauge de Santé Mentale en raison du harcèlement ("backlash") généré par sa propre communauté.
+* **Scénario de Burn-out :** Si le joueur prend des décisions radicales, comme un changement brutal de bord politique, il subit une forte pénalité de Santé Mentale. S'il s'obstine à multiplier les actions qui contredisent ses convictions initiales (dissonance cognitive), cette jauge continuera de se vider jusqu'à l'épuisement total.
 
 ---
 
