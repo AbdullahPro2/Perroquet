@@ -1,16 +1,18 @@
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 export const Sidebar = () => {
-  const navigate = useNavigate();
-
   // NOUVEAU : Fonction pour quitter volontairement
- const handleQuit = () => {
-    if (window.confirm("Voulez-vous vraiment quitter ? Votre progression sera perdue.")) {
+  const handleQuit = () => {
+    if (
+      window.confirm(
+        "Voulez-vous vraiment quitter ? Votre progression sera perdue.",
+      )
+    ) {
       // 1. On détruit les DEUX types de stockages pour être sûr à 100%
       localStorage.removeItem("perroquet-game-v4");
       sessionStorage.removeItem("perroquet-game-v4");
-      
-      // 2. On utilise 'replace' au lieu de 'href' pour empêcher le joueur 
+
+      // 2. On utilise 'replace' au lieu de 'href' pour empêcher le joueur
       // de faire "Retour" et de recharger un état fantôme.
       window.location.replace("/intro");
     }
@@ -62,7 +64,7 @@ export const Sidebar = () => {
             Data Center
           </span>
         </NavLink>
-        
+
         {/* BOUTON QUITTER MANUEL (Version Mobile intégrée dans la ligne) */}
         <button
           onClick={handleQuit}
