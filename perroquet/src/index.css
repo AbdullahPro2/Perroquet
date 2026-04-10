@@ -121,12 +121,12 @@ textarea {
   z-index: 10;
 }
 
-.recharts-wrapper,
+/* .recharts-wrapper,
 .recharts-responsive-container {
   max-width: 100% !important;
   min-height: 250px;
   min-width: 0 !important;
-}
+} */
 
 /* --- Tablet --- */
 @media (max-width: 1024px) {

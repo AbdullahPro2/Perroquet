@@ -8,8 +8,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { useId } from "react";
-
 export interface SimulationDataPoint {
   id: string;
   postCount: number;
@@ -22,15 +20,19 @@ interface SimulationChartProps {
 }
 
 export const SimulationChart = ({ data }: SimulationChartProps) => {
-  const idAudience = useId();
-  const idHealth = useId();
   if (!data || data.length === 0) return null;
 
-  const isGameStarted = data.length > 1;
+  // 1. Dégeler la donnée (Immer) et sécuriser l'axe X pour Recharts
+  // On convertit le postCount en String ("0", "1") car Recharts bug souvent sur le chiffre 0 pur.
+  const safeData = data.map((item) => ({
+    ...item,
+    safePostCount: `${item.postCount}`,
+  }));
 
-  // Déclaration explicite des couleurs pour éviter les bugs liés à var() dans le SVG
-  const COLOR_AUDIENCE = "#2563eb"; // Correspond à --color-metric-audience
-  const COLOR_HEALTH = "#f43f5e";   // Correspond à --color-metric-health-low
+  const isGameStarted = safeData.length > 1;
+
+  const COLOR_AUDIENCE = "#2563eb";
+  const COLOR_HEALTH = "#f43f5e";
 
   return (
     <div className="w-full bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700 glass-panel">
@@ -45,18 +47,19 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
           <p className="text-xs text-center mt-1">Publiez votre premier contenu pour générer le graphique.</p>
         </div>
       ) : (
-        <div className="w-full h-[250px] relative">
+        // 2. Conteneur strict : width 99% est LE hack officiel pour éviter que Flexbox n'écrase Recharts
+        <div style={{ width: "99%", height: "250px", position: "relative" }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={data}
-              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              data={safeData}
+              margin={{ top: 10, right: 0, left: -20, bottom: 0 }}
             >
               <defs>
-                <linearGradient id={idAudience} x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="colorAudience" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={COLOR_AUDIENCE} stopOpacity={0.3} />
                   <stop offset="95%" stopColor={COLOR_AUDIENCE} stopOpacity={0} />
                 </linearGradient>
-                <linearGradient id={idHealth} x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="colorHealth" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor={COLOR_HEALTH} stopOpacity={0.3} />
                   <stop offset="95%" stopColor={COLOR_HEALTH} stopOpacity={0} />
                 </linearGradient>
@@ -69,19 +72,33 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
               />
               
               <XAxis
-                dataKey="postCount"
+                dataKey="safePostCount"
                 stroke="#64748b"
                 fontSize={10}
                 tickLine={false}
                 axisLine={false}
+                tickFormatter={(value) => `Semaine ${value}`}
               />
               
               <YAxis
-                stroke="#64748b"
+                yAxisId="left"
+                stroke={COLOR_AUDIENCE}
                 fontSize={10}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => (value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value)}
+                // Sécurité stricte du retour en chaîne de caractères
+                tickFormatter={(value) => (value >= 1000 ? `${(value / 1000).toFixed(1)}k` : `${value}`)}
+              />
+
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                stroke={COLOR_HEALTH}
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
+                domain={[0, 100]}
+                tickFormatter={(value) => `${value}%`}
               />
 
               <Tooltip
@@ -92,26 +109,30 @@ export const SimulationChart = ({ data }: SimulationChartProps) => {
                   color: "#f8fafc",
                 }}
                 itemStyle={{ fontWeight: "bold" }}
+                labelFormatter={(label) => `Semaine ${label}`}
               />
 
               <Area
+                yAxisId="left"
                 isAnimationActive={false}
                 type="monotone"
                 dataKey="audience"
                 name="Abonnés"
                 stroke={COLOR_AUDIENCE}
                 fillOpacity={1}
-                fill={`url(#${idAudience})`}
+                fill="url(#colorAudience)"
                 strokeWidth={2}
               />
+
               <Area
+                yAxisId="right"
                 isAnimationActive={false}
                 type="monotone"
                 dataKey="mentalHealth"
                 name="Santé Mentale"
                 stroke={COLOR_HEALTH}
                 fillOpacity={1}
-                fill={`url(#${idAudience})`}
+                fill="url(#colorHealth)"
                 strokeWidth={2}
               />
             </AreaChart>
