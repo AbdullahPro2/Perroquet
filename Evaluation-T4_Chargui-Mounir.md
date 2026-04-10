@@ -24,10 +24,12 @@ Les étapes du projet tuteuré T2 sont les suivantes :
 
 # Propositions d'amélioration du jeu
 
-- 
+- Ajouter un tutoriel interactif lors du premier lancement du jeu
+- Affichage de bulles explicatives (type onboarding) pour présenter chaque élément de l’interface .
+- Permet au joueur de comprendre rapidement les mécaniques sans devoir deviner.
+- Ajouter un rappel des possibilités d’achat.
+- Indiquer clairement dans l’interface (ex : icône ou surbrillance) quand une option devient disponible.
 
-
-- 
 
 ## Grille d'évaluation T2 (à remplir par les membres du groupe T4)
 
@@ -96,50 +98,51 @@ Les étapes du projet tuteuré T2 sont les suivantes :
   - [ ] Julien Gossa est owner du dépôt GIT.
   - [ ] Julien Gossa n'est pas owner du dépôt GIT.
 
-Justifications :
+
 
 ## Prototype
 - Installation
   - [ ] Le prototype s'installe sans effort.
-  - [ ] Le prototype s'installe en suivant une procédure.
-  - [x] Le prototype ne s'installe pas.
+  - [X] Le prototype s'installe en suivant une procédure.
+  - [ ] Le prototype ne s'installe pas.
 - Exécution
-  - [ ] Le prototype s'exécute en cliquant sur une icône.
+  - [X] Le prototype s'exécute en cliquant sur une icône.
   - [ ] Le prototype s'exécute en suivant une procédure.
-  - [x] Le prototype ne s'exécute pas
+  - [ ] Le prototype ne s'exécute pas
 - Stabilité
-  - [ ] Le prototype est parfaitement stable
+  - [X] Le prototype est parfaitement stable
   - [ ] Le prototype est rarement instable
-  - [x] Le prototype est instable
+  - [ ] Le prototype est instable
 - Affordabilité
   - [ ] Toutes les instructions de jeu sont incluses dans le prototype au cours d'une partie normale.
   - [ ] Les instructions de jeu sont sous forme d'un manuel ou d'un tutoriel à part.
-  - [x] Les instructions de jeu ne sont pas données.
+  - [X] Les instructions de jeu ne sont pas données.
 - Transmission du concept
   - [ ] J'ai appris quelque chose en jouant.
-  - [ ] J'ai eu de l'intérêt en jouant, mais sans rien apprendre.
-  - [x] Je n'ai pas eu d'intérêt en jouant.
+  - [X] J'ai eu de l'intérêt en jouant, mais sans rien apprendre.
+  - [ ] Je n'ai pas eu d'intérêt en jouant.
 
 Résumer en une phrase ce que vous avez éventuellement appris en jouant :
 
 Autres justifications :
+J’ai testé le jeu en lançant plusieurs parties, en essayant différents choix (Gauche, radical, cours) afin d’observer leur impact sur les statistiques, ce qui m’a permis de vérifier la stabilité du prototype, l’absence d’instructions intégrées et le bon fonctionnement global de l’exécution.
 
 ## Présentation README.md
 
 - Présentation du projet
   - [ ] Cette partie est informative et succincte (1 phrase).
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Captures d'écran
-  - [ ] Plusieurs captures d'écran soignées sont données.
+  - [X] Plusieurs captures d'écran soignées sont données.
   - [ ] Une capture d'écran est donnée.
   - [ ] Aucune capture d'écran n'est donnée.
 - Procédures d'installation et d'exécution
-  - [ ] Cette partie est informative et succincte (1 phrase).
+  - [X] Cette partie est informative et succincte (1 phrase).
   - [ ] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 
-Justifications :
+
 
 ## Cahier des charges 
 
@@ -147,45 +150,46 @@ Pour un exemple de ce qui est attenu, voir https://gitlab.unistra.fr/T234/t4-exe
 
 - Objectifs pédagogiques
   - [ ] Cette partie est informative et correspond au style de l'exemple.
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Objectifs pédagogiques avancés 
   - [ ] Cette partie est informative et correspond au style de l'exemple.
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Références
-  - [ ] Cette partie est informative et correspond au style de l'exemple.
+  - [X] Cette partie est informative et correspond au style de l'exemple.
   - [ ] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Description des fonctionnalités (hors interface et actions)
   - [ ] Cette partie est informative et correspond au style de l'exemple.
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Interface
   - [ ] Cette partie est informative et correspond au style de l'exemple.
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Actions du joueur
   - [ ] Cette partie est informative et correspond au style de l'exemple.
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Scénarios
   - [ ] Cette partie est informative et correspond au style de l'exemple.
-  - [ ] Cette partie est informative.
+  - [X] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Contraintes de développement
-  - [ ] Cette partie est informative et correspond au style de l'exemple.
+  - [X] Cette partie est informative et correspond au style de l'exemple.
   - [ ] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 - Fonctionnalités et scénarios avancés
-  - [ ] Cette partie est informative et correspond au style de l'exemple.
+  - [X] Cette partie est informative et correspond au style de l'exemple.
   - [ ] Cette partie est informative.
   - [ ] Cette partie n'est pas informative.
 
 Justifications :
+La plupart des parties sont globalement compréhensibles et expliquent bien les objectifs du projet, mais elles manquent souvent de précision technique (formules, conditions, structures de données). Le niveau de rigueur attendu n’est pas toujours respecté, notamment pour permettre une implémentation directe sans ambiguïté. Enfin, la partie des références est detailler : plusieurs source son donné permettant a l'utilisateur de comprendre le scénarios du jeu malheuresement manquement de détaille sur la santé mental mais dans la globalité c'est pas mal.
 
 ## Résultat T4
-- Total d'item « Excellent » (2 point) : 
-- Total d'item « Satisfaisant » (1 point) : 
-- Total d'item « Insatisfaisant » (0 point) :
-- total des points (sur 40) :
+- Total d'item « Excellent » (2 point) : 10 
+- Total d'item « Satisfaisant » (1 point) : 9
+- Total d'item « Insatisfaisant » (0 point) :1
+- total des points (sur 40) :29
