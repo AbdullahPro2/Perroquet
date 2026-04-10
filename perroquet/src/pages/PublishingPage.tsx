@@ -16,7 +16,7 @@ export const PublishingPage = () => {
       }
       // Puis on l'envoie voir les résultats
       navigate("/result", { replace: true });
-    }, 1000); // Attente de 1 seconde
+    }, 300); // Attente de 0,300 secondes
 
     return () => clearTimeout(timer);
   }, [navigate, location, publishContent]);
