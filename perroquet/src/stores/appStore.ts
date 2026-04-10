@@ -163,7 +163,7 @@ export const useAppStore = create<GameState>()(
 
             const isTrending = themeChoice === state.currentTrend;
 
-            // A. DISTANCE IDÉOLOGIQUE (Hypocrisie)
+            // DISTANCE IDÉOLOGIQUE (Hypocrisie)
             const initialValue = state.initialCamp
               ? CAMP_VALUES[state.initialCamp]
               : 0;
@@ -184,7 +184,7 @@ export const useAppStore = create<GameState>()(
               healthChange += 19; // Prendre le temps de faire du contenu long est valorisant
             }
 
-            // 2. Ton
+            // Ton
             if (tone === "radical") {
               engagementScore += currentPlatformConfig.bias.tonRadical;
               healthChange -= 8; // Le clash épuise toujours mentalement
@@ -193,6 +193,7 @@ export const useAppStore = create<GameState>()(
               healthChange += 19; // La nuance repose mentalement
             }
 
+
             // --- MÉCANIQUE DE SOIN RAPIDE ---
             // Si on fait "long" (plus interressant) et "nuancé" (pas de clash),
             // on se repose énormément. On ajoute +25 pour un total de +30.
@@ -200,18 +201,19 @@ export const useAppStore = create<GameState>()(
             //  healthChange += 25;
             //}
 
-            // 3. Tendance
+            // Tendance
+
             if (isTrending) {
               engagementScore += currentPlatformConfig.bias.tendanceBoost;
             }
 
-            // 4. Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
+            // Pénalité Extrême Globale (Le clivage politique paie toujours un minimum)
             if (camp === "extreme_gauche" || camp === "extreme_droite") {
               engagementScore += 2;
               healthChange -= 10;
             }
 
-            // C. CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
+            // CONSÉQUENCES SUR L'AUDIENCE ET LES REVENUS
             let audienceChange = 0;
             
             let capitalGain = Math.floor(

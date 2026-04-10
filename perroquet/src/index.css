@@ -1,16 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  /* Palette de couleurs de la simulation */
-  --color-primary: #4f46e5; /* indigo-600 */
-  --color-background: #0f172a; /* slate-900 */
-  --color-surface: #1e293b; /* slate-800 */
+  --color-primary: #4f46e5;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
 
-  /* Sémantique du jeu */
-  --color-metric-audience: #2563eb; /* blue-600 */
-  --color-metric-capital: #f59e0b; /* amber-500 */
-  --color-metric-health-high: #10b981; /* emerald-500 */
-  --color-metric-health-low: #f43f5e; /* rose-500 */
+  --color-metric-audience: #2563eb;
+  --color-metric-capital: #f59e0b;
+  --color-metric-health-high: #10b981;
+  --color-metric-health-low: #f43f5e;
 
   --font-sans:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -25,7 +23,6 @@
     scrollbar-width: none;
   }
 
-  /* Utilitaires de Glassmorphism */
   .glass-panel {
     background-color: rgba(30, 41, 59, 0.7);
     backdrop-filter: blur(12px);
@@ -34,12 +31,261 @@
   }
 }
 
-body {
+:root {
+  --mobile-bottom-nav-h: 74px;
+  --color-metric-audience: #2563eb;
+  --color-metric-health-low: #f43f5e;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+html,
+body,
+#root {
   margin: 0;
-  overflow: hidden;
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
   background-color: var(--color-background);
-  color: #f8fafc; /* slate-50 */
+  color: #f8fafc;
   user-select: none;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#root {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* Media safety */
+img,
+svg,
+canvas,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+select,
+input,
+textarea {
+  min-height: 42px;
+  max-width: 100%;
+}
+
+/* --- Layout guards (no logic change) --- */
+.app-shell {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  overflow: hidden;
+}
+
+.main-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px;
+}
+
+.sidebar {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.topbar {
+  z-index: 10;
+}
+
+.recharts-wrapper,
+.recharts-responsive-container {
+  max-width: 100% !important;
+  min-height: 250px;
+  min-width: 0 !important;
+}
+
+/* --- Tablet --- */
+@media (max-width: 1024px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    height: 100dvh;
+  }
+
+  .content {
+    padding: 12px;
+    padding-bottom: calc(var(--mobile-bottom-nav-h) + 16px);
+  }
+
+  .topbar {
+    margin: 10px 10px 0;
+    padding: 10px 12px;
+    border-radius: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .topbar-hints {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .grid-2,
+  .game-grid,
+  .kpi-strip,
+  .impact-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .card {
+    border-radius: 14px;
+    padding: 12px;
+  }
+
+  .choice-grid .choice-btn,
+  .row .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* --- Mobile --- */
+@media (max-width: 768px) {
+  body {
+    overflow: auto;
+  }
+
+  #root {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .app-shell {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .main-column {
+    min-height: 100dvh;
+  }
+
+  .content {
+    overflow: visible;
+    padding: 10px;
+    padding-bottom: calc(var(--mobile-bottom-nav-h) + 14px);
+  }
+
+  /* Bottom nav behavior for existing sidebar component */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    height: var(--mobile-bottom-nav-h);
+    max-height: var(--mobile-bottom-nav-h);
+    z-index: 60;
+    border-radius: 14px 14px 0 0;
+    padding: 8px 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-brand,
+  .sidebar-brief,
+  .sidebar-stats,
+  .danger-pill {
+    display: none !important;
+  }
+
+  .sidebar-nav {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .sidebar-link {
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .chip {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+}
+
+/* --- Small mobile --- */
+@media (max-width: 420px) {
+  .content {
+    padding: 8px;
+    padding-bottom: calc(var(--mobile-bottom-nav-h) + 10px);
+  }
+
+  .btn,
+  .choice-btn {
+    padding: 9px 10px;
+    font-size: 13px;
+  }
+
+  .sidebar-link {
+    font-size: 11px;
+  }
+}
+
+/* iOS safe area */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  @media (max-width: 768px) {
+    .sidebar {
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+      height: calc(var(--mobile-bottom-nav-h) + env(safe-area-inset-bottom));
+      max-height: calc(
+        var(--mobile-bottom-nav-h) + env(safe-area-inset-bottom)
+      );
+    }
+
+    .content {
+      padding-bottom: calc(
+        var(--mobile-bottom-nav-h) + env(safe-area-inset-bottom) + 14px
+      );
+    }
+  }
 }

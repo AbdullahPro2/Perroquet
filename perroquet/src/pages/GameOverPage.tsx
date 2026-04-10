@@ -1,12 +1,12 @@
 import { useAppStore } from "../stores/appStore";
-import { useLocation } from "react-router-dom"; // <-- 1. AJOUT DE L'IMPORT
+import { useLocation } from "react-router-dom";
 
 export const GameOverPage = () => {
   const audience = useAppStore((state) => state.audience);
   const capital = useAppStore((state) => state.capital);
   const postCount = useAppStore((state) => state.postCount);
 
-  // 2. ON RÉCUPÈRE LA RAISON DE LA DÉFAITE
+  // ON RÉCUPÈRE LA RAISON DE LA DÉFAITE
   const location = useLocation();
   const reason = location.state?.reason || "burnout";
 
@@ -19,12 +19,12 @@ export const GameOverPage = () => {
     <div className="min-h-screen w-full overflow-hidden bg-slate-950 flex items-center justify-center p-4">
       <div className="bg-slate-900 border border-rose-500/30 rounded-2xl shadow-2xl shadow-rose-900/20 p-8 max-w-lg w-full text-center">
         
-        {/* 3. TITRE DYNAMIQUE */}
+        {/* TITRE DYNAMIQUE */}
         <h1 className="text-5xl font-black text-rose-600 mb-2 uppercase tracking-widest">
           {reason === "burnout" ? "Burn Out" : "Flop Total"}
         </h1>
         
-        {/* 4. TEXTE DYNAMIQUE */}
+        {/* TEXTE DYNAMIQUE */}
         <p className="text-slate-400 mb-8">
           {reason === "burnout" 
             ? "Votre santé mentale a atteint 0%. L'algorithme a eu raison de vos convictions."
@@ -37,7 +37,7 @@ export const GameOverPage = () => {
           </h2>
           <div className="flex justify-between">
             <span className="text-slate-400">Publications :</span>
-            {/* 5. ON AFFICHE LE NOMBRE DE SEMAINE SUR 10 */}
+            {/* ON AFFICHE LE NOMBRE DE SEMAINE SUR 10 */}
             <span className="font-bold text-white">{postCount} / 10 semaines</span>
           </div>
           <div className="flex justify-between">

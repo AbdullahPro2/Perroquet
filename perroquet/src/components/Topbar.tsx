@@ -4,45 +4,59 @@ export const Topbar = () => {
   const { audience, capital, mentalHealth } = useAppStore();
 
   return (
-    <header className="h-20 bg-dark shadow-sm border-b border-slate-200 flex items-center justify-end px-8 shrink-0 gap-8 z-10">
-      <div className="flex items-center gap-3">
-        <span className="text-3xl">👀</span>
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase font-bold text-slate-400">
-            Audience Globale
-          </span>
-          <span className="text-xl font-black text-blue-600">
-            {audience.toLocaleString()}
-          </span>
+    <header className="flex flex-col p-4 gap-3 bg-slate-900 border-b border-slate-800 shrink-0 z-10 md:flex-row md:h-20 md:items-center md:justify-end md:gap-8 md:px-8 md:py-0 md:bg-transparent md:border-slate-800/50">
+      {/* Top Block: Audience and Capital */}
+      <div className="flex justify-between items-center w-full md:w-auto md:justify-end md:gap-8">
+        {/* Audience */}
+        <div className="flex items-center gap-2 md:gap-3">
+          <span className="text-2xl md:text-3xl">👀</span>
+          <div className="flex flex-col">
+            <span className="text-[10px] uppercase font-bold text-slate-400 leading-none mb-1">
+              Audience
+            </span>
+            <span className="text-lg md:text-xl font-black text-blue-500 leading-none">
+              {audience.toLocaleString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Treasury */}
+        <div className="flex items-center gap-2 md:gap-3 md:border-l md:border-slate-700/50 md:pl-8">
+          <span className="text-2xl md:text-3xl">💰</span>
+          <div className="flex flex-col text-right md:text-left">
+            <span className="text-[10px] uppercase font-bold text-slate-400 leading-none mb-1">
+              Trésorerie
+            </span>
+            <span className="text-lg md:text-xl font-black text-amber-500 leading-none">
+              {capital} €
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 border-l border-slate-200 pl-8">
-        <span className="text-3xl">💰</span>
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase font-bold text-slate-400">
-            Trésorerie
+      {/* Bottom Block: Mental Health */}
+      <div className="w-full md:w-40 flex flex-col justify-center md:border-l md:border-slate-700/50 md:pl-8">
+        <div className="flex justify-between items-end mb-1.5">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 leading-none">
+            Santé Mentale
           </span>
-          <span className="text-xl font-black text-amber-500">{capital} €</span>
-        </div>
-      </div>
-
-      <div className="flex flex-col justify-center w-32 border-l border-slate-200 pl-8">
-        <div className="flex justify-between text-[10px] font-bold mb-1 uppercase tracking-wider">
-          <span className="text-slate-500">Santé Mentale</span>
           <span
-            className={
+            className={`text-[10px] font-bold leading-none ${
               mentalHealth < 30
                 ? "text-rose-500 animate-pulse"
-                : "text-slate-200"
-            }
+                : "text-slate-300"
+            }`}
           >
             {mentalHealth}%
           </span>
         </div>
-        <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner">
+        {/* Progress Bar Track */}
+        <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden shadow-inner border border-slate-700/50">
+          {/* Progress Bar Fill */}
           <div
-            className={`h-full rounded-full transition-all duration-500 ${mentalHealth < 30 ? "bg-rose-500" : "bg-emerald-500"}`}
+            className={`h-full rounded-full transition-all duration-500 ${
+              mentalHealth < 30 ? "bg-rose-500" : "bg-emerald-500"
+            }`}
             style={{ width: `${mentalHealth}%` }}
           ></div>
         </div>
