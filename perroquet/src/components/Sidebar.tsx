@@ -1,12 +1,27 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 
 export const Sidebar = () => {
+  const navigate = useNavigate();
+
+  // NOUVEAU : Fonction pour quitter volontairement
+ const handleQuit = () => {
+    if (window.confirm("Voulez-vous vraiment quitter ? Votre progression sera perdue.")) {
+      // 1. On détruit les DEUX types de stockages pour être sûr à 100%
+      localStorage.removeItem("perroquet-game-v4");
+      sessionStorage.removeItem("perroquet-game-v4");
+      
+      // 2. On utilise 'replace' au lieu de 'href' pour empêcher le joueur 
+      // de faire "Retour" et de recharger un état fantôme.
+      window.location.replace("/intro");
+    }
+  };
+
   return (
     <nav className="fixed bottom-0 left-0 w-full z-50 bg-slate-900 border-t border-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] md:relative md:w-64 md:border-t-0 md:border-r md:shadow-none md:flex md:flex-col md:shrink-0 pb-[env(safe-area-inset-bottom)] md:pb-0">
       {/* Logo - Cache sur Mobile, Visible sur PC */}
       <Link
         to="/"
-        className="hidden md:flex h-20 items-center px-6 border-b border-slate-800 mb-6 hover:bg-slate-800/50 transition-colors"
+        className="hidden md:flex h-20 items-center px-6 border-b border-slate-800 mb-6 hover:bg-slate-800/50 transition-colors shrink-0"
       >
         <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mr-3 shadow-inner text-white">
           🦜
@@ -14,8 +29,8 @@ export const Sidebar = () => {
         <h1 className="font-black text-white tracking-tight">PERROQUET</h1>
       </Link>
 
-      {/* Navigation Links */}
-      <div className="flex flex-row justify-around p-2 md:flex-col md:justify-start md:px-4 md:gap-2">
+      {/* Navigation Links - flex-1 pour pousser le bouton quitter en bas sur PC */}
+      <div className="flex flex-row justify-around p-2 md:flex-col md:justify-start md:px-4 md:gap-2 flex-1">
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -47,6 +62,28 @@ export const Sidebar = () => {
             Data Center
           </span>
         </NavLink>
+        
+        {/* BOUTON QUITTER MANUEL (Version Mobile intégrée dans la ligne) */}
+        <button
+          onClick={handleQuit}
+          className="flex flex-col items-center justify-center p-2 rounded-xl transition-all md:hidden text-rose-500 hover:text-rose-400"
+        >
+          <span className="text-2xl mb-1">🚪</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider">
+            Quitter
+          </span>
+        </button>
+      </div>
+
+      {/* BOUTON QUITTER MANUEL (Version PC en bas de la barre) */}
+      <div className="hidden md:flex p-4 border-t border-slate-800 mt-auto">
+        <button
+          onClick={handleQuit}
+          className="flex items-center justify-center w-full px-4 py-3 rounded-xl transition-all text-rose-500 hover:bg-rose-950/30 hover:text-rose-400 font-bold text-sm"
+        >
+          <span className="mr-3 text-lg">🚪</span>
+          Quitter la partie
+        </button>
       </div>
     </nav>
   );

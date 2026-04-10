@@ -11,7 +11,7 @@ export const GameOverPage = () => {
   const reason = location.state?.reason || "burnout";
 
   const handleRestart = () => {
-    localStorage.removeItem("perroquet-game-v4"); 
+    sessionStorage.removeItem("perroquet-game-v4"); // MODIFIÉ : sessionStorage au lieu de localStorage
     window.location.href = "/setup";
   };
 

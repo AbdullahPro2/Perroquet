@@ -5,7 +5,8 @@ export const VictoryPage = () => {
 
   const handleRestart = () => {
     localStorage.removeItem("perroquet-game-v4"); 
-    window.location.href = "/setup";
+    sessionStorage.removeItem("perroquet-game-v4");
+    window.location.replace("/setup");
   };
 
   return (
